@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "amountDue": 600,
+    "amountPaid": 600,
+    "dueDate": "2024-04-19T00:00:00Z",
+    "paymentDate": "2024-04-18T00:00:00Z",
+    "paymentStatus": "Paid",
+    "reservationId": 1
+  },
+  {
+    "id": 2,
+    "amountDue": 160,
+    "amountPaid": 0,
+    "dueDate": "2024-04-21T00:00:00Z",
+    "paymentDate": null,
+    "paymentStatus": "Pending",
+    "reservationId": 2
+  },
+  {
+    "id": 3,
+    "amountDue": 450,
+    "amountPaid": 450,
+    "dueDate": "2024-04-24T00:00:00Z",
+    "paymentDate": "2024-04-23T00:00:00Z",
+    "paymentStatus": "Paid",
+    "reservationId": 3
+  },
+  {
+    "id": 4,
+    "amountDue": 240,
+    "amountPaid": 120,
+    "dueDate": "2024-04-25T00:00:00Z",
+    "paymentDate": "2024-04-24T00:00:00Z",
+    "paymentStatus": "PartiallyPaid",
+    "reservationId": 4
+  },
+  {
+    "id": 5,
+    "amountDue": 400,
+    "amountPaid": 0,
+    "dueDate": "2024-04-26T00:00:00Z",
+    "paymentDate": null,
+    "paymentStatus": "Pending",
+    "reservationId": 5
+  }
+]

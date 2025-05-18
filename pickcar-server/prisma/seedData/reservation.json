@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "carId": 1,
+    "renterCognitoId": "renter-1-cognito-id",
+    "startDate": "2024-04-20T00:00:00Z",
+    "endDate": "2024-04-25T00:00:00Z",
+    "totalPrice": 600,
+    "status": "Approved",
+    "paymentStatus": "Paid"
+  },
+  {
+    "id": 2,
+    "carId": 2,
+    "renterCognitoId": "renter-2-cognito-id",
+    "startDate": "2024-04-22T00:00:00Z",
+    "endDate": "2024-04-24T00:00:00Z",
+    "totalPrice": 160,
+    "status": "Pending",
+    "paymentStatus": "Pending"
+  },
+  {
+    "id": 3,
+    "carId": 3,
+    "renterCognitoId": "renter-3-cognito-id",
+    "startDate": "2024-04-25T00:00:00Z",
+    "endDate": "2024-04-28T00:00:00Z",
+    "totalPrice": 450,
+    "status": "Approved",
+    "paymentStatus": "Paid"
+  },
+  {
+    "id": 4,
+    "carId": 4,
+    "renterCognitoId": "renter-4-cognito-id",
+    "startDate": "2024-04-26T00:00:00Z",
+    "endDate": "2024-04-30T00:00:00Z",
+    "totalPrice": 240,
+    "status": "Approved",
+    "paymentStatus": "PartiallyPaid"
+  },
+  {
+    "id": 5,
+    "carId": 5,
+    "renterCognitoId": "renter-5-cognito-id",
+    "startDate": "2024-04-27T00:00:00Z",
+    "endDate": "2024-04-29T00:00:00Z",
+    "totalPrice": 400,
+    "status": "Rejected",
+    "paymentStatus": "Pending"
+  }
+] 

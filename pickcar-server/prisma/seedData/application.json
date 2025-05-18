@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "name": "Alex Johnson",
+    "email": "alex.johnson@example.com",
+    "phoneNumber": "+1 (555) 111-2222",
+    "message": "I need a car for a business trip",
+    "carId": 1,
+    "renterCognitoId": "renter-1-cognito-id"
+  },
+  {
+    "id": 2,
+    "name": "Maria Garcia",
+    "email": "maria.garcia@example.com",
+    "phoneNumber": "+1 (555) 222-3333",
+    "message": "Looking for a family car for vacation",
+    "carId": 2,
+    "renterCognitoId": "renter-2-cognito-id"
+  },
+  {
+    "id": 3,
+    "name": "James Wilson",
+    "email": "james.wilson@example.com",
+    "phoneNumber": "+1 (555) 333-4444",
+    "message": "Need a luxury car for a special occasion",
+    "carId": 3,
+    "renterCognitoId": "renter-3-cognito-id"
+  },
+  {
+    "id": 4,
+    "name": "Sarah Lee",
+    "email": "sarah.lee@example.com",
+    "phoneNumber": "+1 (555) 444-5555",
+    "message": "Looking for an economical car for daily commute",
+    "carId": 4,
+    "renterCognitoId": "renter-4-cognito-id"
+  },
+  {
+    "id": 5,
+    "name": "David Kim",
+    "email": "david.kim@example.com",
+    "phoneNumber": "+1 (555) 555-6666",
+    "message": "Want to rent a sports car for the weekend",
+    "carId": 5,
+    "renterCognitoId": "renter-5-cognito-id"
+  }
+]
