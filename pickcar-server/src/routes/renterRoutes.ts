@@ -1,5 +1,5 @@
 import  express  from "express";  
-import { createRenter, getRenter,updateRenter } from "../controllers/renterController";
+import { createRenter, getRenter,updateRenter } from "../controllers/renterControllers";
 
 
 const router = express.Router();

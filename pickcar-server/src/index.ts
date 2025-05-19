@@ -9,6 +9,7 @@ import { authMiddleware } from './middleware/authMiddleware';
 /*ROUTES IMPORT*/
 import renterRoutes from './routes/renterRoutes';
 import managerRoutes from './routes/managerRoutes';
+import carRoutes from './routes/carRoutes';
 
 /*CONFIGURATION*/
 dotenv.config();
@@ -26,9 +27,9 @@ app.use(cors ());
 app.get('/',  (req, res) => {
     res.send('home route test');
 });
-
 app.use("/renters",authMiddleware(["renter"]), renterRoutes)
 app.use("/managers",authMiddleware(["manager"]), managerRoutes)
+app.use("/cars", carRoutes)
 
 /*SERVER*/
 const port = process.env.PORT || 5000;
