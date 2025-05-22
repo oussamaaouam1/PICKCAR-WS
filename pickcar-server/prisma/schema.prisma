@@ -56,19 +56,37 @@ enum PaymentStatus {
   Refunded
 }
 
+enum TransmissionType {
+  All
+  Manual
+  Automatic
+}
+
+enum FuelType {
+  combustion
+  Electric
+  Hybrid
+}
+
 model Car {
-  id               Int          @id @default(autoincrement())
-  name             String
-  description      String
-  pricePerDay      Float
-  availableFrom    DateTime
-  availableTo      DateTime
-  carType          CarType
-  carFeatures      CarFeature[]
+  id            Int          @id @default(autoincrement())
+  name          String
+  description   String
+  pricePerDay   Float
+  availableFrom DateTime
+  availableTo   DateTime
+  carType       CarType
+  carFeatures   CarFeature[]
+
+  seats        Int
+  transmission TransmissionType
+  fuelType     FuelType
+  brand        String
+
   imageUrls        String[]
   locationId       Int
-  rating           Float?       @default(0)
-  numberOfReviews  Int?         @default(0)
+  rating           Float?   @default(0)
+  numberOfReviews  Int?     @default(0)
   managerCognitoId String
 
   manager      Manager       @relation(fields: [managerCognitoId], references: [cognitoId])
@@ -76,6 +94,7 @@ model Car {
   reservations Reservation[]
   applications Application[]
   favoritedBy  Renter[]      @relation("RenterFavorites")
+  renters      Renter[]      @relation("RenterCars")
 }
 
 model Manager {
@@ -96,6 +115,7 @@ model Renter {
   phoneNumber String
 
   reservations Reservation[]
+  cars         Car[]         @relation("RenterCars")
   favorites    Car[]         @relation("RenterFavorites")
   applications Application[]
 }

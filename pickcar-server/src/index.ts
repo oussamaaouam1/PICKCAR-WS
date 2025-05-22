@@ -11,7 +11,7 @@ import renterRoutes from './routes/renterRoutes';
 import managerRoutes from './routes/managerRoutes';
 import carRoutes from './routes/carRoutes';
 
-/*CONFIGURATION*/
+/*CONFIGURATION*/   
 dotenv.config();
 const app = express();
 app.use (express.json ());
