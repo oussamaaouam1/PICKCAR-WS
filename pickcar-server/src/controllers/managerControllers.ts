@@ -1,5 +1,6 @@
 import { Request,Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import { wktToGeoJSON } from "@terraformer/wkt";
 
 
 const prisma = new PrismaClient();
@@ -58,3 +59,61 @@ export const updateManager = async (req:Request, res:Response): Promise<void> =>
     res.status(500).json({message:`Error creating manager: ${error.message}`});
   }
 };
+
+
+
+export const getManagerCars = async(
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+
+    const { cognitoId } = req.params;
+    
+
+    const cars = await prisma.car.findMany({
+      where: {managerCognitoId: cognitoId},
+      include: {
+        location: true,
+        // reservations: true,
+      },
+    })
+
+const carsWithFormattedLocation = await Promise.all(
+  cars.map(async (car) => {
+    // Convert PostGIS coordinates to GeoJSON
+
+    const coordinates : { coordinates : string}[]= 
+      await prisma.$queryRaw`
+      SELECT ST_asText(coordinates) as coordinates 
+      FROM "Location" 
+      WHERE id = ${car.locationId}
+      `;
+      const geoJSON :any = wktToGeoJSON(coordinates[0]?.coordinates || "" );
+          // Extract longitude and latitude
+      const longitude = geoJSON.coordinates[0];
+      // Note: GeoJSON coordinates are in [longitude, latitude] order
+      // so we need to access them accordingly
+      const latitude = geoJSON.coordinates[1];
+
+
+      return  {
+        ...car,
+        location: {
+          ...car.location,
+          coordinates: {
+            longitude,
+            latitude,
+          },
+        },
+      }
+
+  })
+)
+      res.status(200).json(carsWithFormattedLocation);
+      
+
+  } catch (error: any) {
+    res.status(500).json({ message: `Error fetching manager cars: ${error.message}` });
+  }
+}
