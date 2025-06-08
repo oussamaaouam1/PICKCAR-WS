@@ -10,6 +10,8 @@ import { authMiddleware } from './middleware/authMiddleware';
 import renterRoutes from './routes/renterRoutes';
 import managerRoutes from './routes/managerRoutes';
 import carRoutes from './routes/carRoutes';
+import reservationRoutes from './routes/reservationRoutes'
+import applicationRoutes from './routes/applicationRoutes';
 
 /*CONFIGURATION*/   
 dotenv.config();
@@ -27,9 +29,11 @@ app.use(cors ());
 app.get('/',  (req, res) => {
     res.send('home route test');
 });
+app.use("applications",authMiddleware(["renter","manager"]),applicationRoutes)// application routes should be accessible by both renters and managers TO BE MODIFIED IF NOT WORKED (delete the auth option)
+app.use("/cars", carRoutes)
+app.use("/reservation",reservationRoutes)
 app.use("/renters",authMiddleware(["renter"]), renterRoutes)
 app.use("/managers",authMiddleware(["manager"]), managerRoutes)
-app.use("/cars", carRoutes)
 
 /*SERVER*/
 const port = process.env.PORT || 5000;

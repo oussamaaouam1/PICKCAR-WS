@@ -56,6 +56,12 @@ enum PaymentStatus {
   Refunded
 }
 
+enum ApplicationStatus {
+  Pending
+  Denied
+  Approved
+}
+
 enum TransmissionType {
   All
   Manual
@@ -129,6 +135,7 @@ model Reservation {
   totalPrice      Float
   status          ReservationStatus
   paymentStatus   PaymentStatus     @default(Pending)
+  application     Application?
 
   car      Car       @relation(fields: [carId], references: [id])
   renter   Renter    @relation(fields: [renterCognitoId], references: [cognitoId])
@@ -136,16 +143,21 @@ model Reservation {
 }
 
 model Application {
-  id              Int     @id @default(autoincrement())
+  id              Int               @id @default(autoincrement())
+  applicationDate DateTime          @default(now())
+  status          ApplicationStatus @default(Pending)
+
   name            String
   email           String
   phoneNumber     String
   message         String?
   carId           Int
   renterCognitoId String
+  reservationId   Int?    @unique
 
-  car    Car    @relation(fields: [carId], references: [id])
-  renter Renter @relation(fields: [renterCognitoId], references: [cognitoId])
+  car         Car          @relation(fields: [carId], references: [id])
+  renter      Renter       @relation(fields: [renterCognitoId], references: [cognitoId])
+  reservation Reservation? @relation(fields: [reservationId], references: [id])
 }
 
 model Payment {

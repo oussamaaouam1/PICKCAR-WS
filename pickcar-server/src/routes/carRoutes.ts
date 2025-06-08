@@ -1,5 +1,5 @@
 import  express  from "express";  
-import { getCar,getCars,createCar } from "../controllers/carController";
+import { getCar,getCars,createCar } from "../controllers/carControllers";
 import { authMiddleware } from "../middleware/authMiddleware";
 import multer from "multer";
 const storage = multer.memoryStorage();
