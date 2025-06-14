@@ -74,7 +74,7 @@ const FiltersBar = () => {
     updateURL(newFilters);
   };
   return (
-    <div className="flex justify-between items-center w-full py-5">
+    <div className="flex justify-between items-center w-full py-5 font-michroma">
       {/* Filters */}
       <div className="flex justify-between items-center gap-4 p-2">
         {/* All Filters */}
@@ -180,8 +180,8 @@ const FiltersBar = () => {
             >
               <SelectTrigger className="rounded-xl border-secondary-900 cursor-pointer">
                 <SelectValue placeholder="Seats">
-                  {filters.seats === null || filters.seats === "any" 
-                    ? "Any number of seats" 
+                  {filters.seats === null || filters.seats === "any"
+                    ? "Any number of seats"
                     : `${filters.seats} Seats`}
                 </SelectValue>
               </SelectTrigger>
@@ -190,7 +190,11 @@ const FiltersBar = () => {
                   Any number of seats
                 </SelectItem>
                 {Array.from({ length: 8 }, (_, i) => i + 2).map((seats) => (
-                  <SelectItem key={seats} value={seats.toString()} className="cursor-pointer">
+                  <SelectItem
+                    key={seats}
+                    value={seats.toString()}
+                    className="cursor-pointer"
+                  >
                     {seats} Seats
                   </SelectItem>
                 ))}
@@ -201,7 +205,7 @@ const FiltersBar = () => {
           <div className="flex gap-1 ">
             {/* seats selector */}
             <Select
-              value={filters.carType || "any"} 
+              value={filters.carType || "any"}
               onValueChange={(value) =>
                 handleFilterChange("carType", value, null)
               }
@@ -217,10 +221,11 @@ const FiltersBar = () => {
                   <SelectItem key={type} value={type}>
                     <div className="flex items-center">
                       <Icon className="h-4 w-4 mr-2" />
-                      <span>{type.charAt(0).toUpperCase() + type.slice(1)}</span>
+                      <span>
+                        {type.charAt(0).toUpperCase() + type.slice(1)}
+                      </span>
                     </div>
                   </SelectItem>
-
                 ))}
               </SelectContent>
             </Select>
@@ -229,22 +234,22 @@ const FiltersBar = () => {
           <div className="flex justify-between items-center gap-4 p-2">
             <div className="flex border rounded-xl">
               <Button
-              variant="ghost"
-              className={cn(
-                "px-3 py-1 rounded-none rounded-l-lg hover:bg-primary-700 hover:text-white cursor-pointer",
-                viewMode === "list" ? "bg-primary-250 text-white": ""
-              )}
-              onClick={() => dispatch(setViewMode("list"))}
+                variant="ghost"
+                className={cn(
+                  "px-3 py-1 rounded-none rounded-l-lg hover:bg-primary-700 hover:text-white cursor-pointer",
+                  viewMode === "list" ? "bg-primary-250 text-white" : ""
+                )}
+                onClick={() => dispatch(setViewMode("list"))}
               >
                 <List className="w-5 h-5" />
               </Button>
               <Button
-              variant="ghost"
-              className={cn(
-                "px-3 py-1 rounded-none rounded-r-lg hover:bg-primary-700 hover:text-white cursor-pointer",
-                viewMode === "grid" ? "bg-primary-250 text-white": ""
-              )}
-              onClick={() => dispatch(setViewMode("grid"))}
+                variant="ghost"
+                className={cn(
+                  "px-3 py-1 rounded-none rounded-r-lg hover:bg-primary-700 hover:text-white cursor-pointer",
+                  viewMode === "grid" ? "bg-primary-250 text-white" : ""
+                )}
+                onClick={() => dispatch(setViewMode("grid"))}
               >
                 <Grid className="w-5 h-5" />
               </Button>

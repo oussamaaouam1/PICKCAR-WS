@@ -7,7 +7,11 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatEnumString(str: string) {
-  return str.replace(/([A-Z])/g, " 1").trim();
+  // Add space before capital letters and convert to title case
+  return str
+    .replace(/([A-Z])/g, ' $1') // Add space before capitals
+    .trim() // Remove extra spaces
+    .replace(/\s+/g, ' '); // Replace multiple spaces with single space
 }
 
 export function formatPriceValue(value: number | null, isMin: boolean) {
