@@ -1,7 +1,8 @@
-import { createNewUserInDatabase } from "@/lib/utils";
-import { Manager, Renter } from "@/types/prismaTypes";
+import { cleanParams, createNewUserInDatabase } from "@/lib/utils";
+import { Car, Manager, Renter } from "@/types/prismaTypes";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth";
+import { FiltersState } from ".";
 // import { get } from "http";
 
 export const api = createApi({
@@ -17,7 +18,7 @@ export const api = createApi({
     }
   }),
   reducerPath: "api",
-  tagTypes: ["Managers", "Renters"],
+  tagTypes: ["Managers", "Renters", "Cars"],
   endpoints: (build) => ({
     getAuthUser: build.query<User, void>({
       queryFn: async (_, _queryApi, _extraoptions, fetchWithBQ) => {
@@ -77,6 +78,33 @@ export const api = createApi({
       }),
       invalidatesTags: (result)=>[{type:'Renters', id: result?.id}],
       
+    }),
+    //car related endpoints
+    getCars : build.query<Car[],Partial<FiltersState> &{favoriteIds? : number[]}>({
+    query:(filters) =>{
+      const params = cleanParams({
+        location: filters.location,
+        priceMin : filters.priceRange?.[0],
+        priceMax : filters.priceRange?.[1],
+        seats: filters.seats,
+        transmission: filters.transmission,
+        fuelType: filters.fuelType,
+        carType: filters.carType,
+        carFeature: filters.carFeature,
+        availableFrom: filters.availableFrom,
+        favoriteIds: filters.favoriteIds?.join(","),
+        latitude: filters.coordinates?.[1],
+        longitude: filters.coordinates?.[0],
+      });
+      return {url:"cars",params}
+    },
+    providesTags: (result) =>
+      result?
+        [
+          ...result.map(({ id }) => ({ type: "Cars" as const, id })),
+          { type: "Cars", id: "LIST" }
+        ]
+        : [{ type: "Cars", id: "LIST" }],
     })
     
   })
@@ -85,5 +113,6 @@ export const api = createApi({
 
 export const {
   useGetAuthUserQuery,useUpdateRenterSettingsMutation,
-  useUpdateManagerSettingsMutation
+  useUpdateManagerSettingsMutation,
+  useGetCarsQuery
 } = api;
