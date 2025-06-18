@@ -27,7 +27,7 @@ export const initialState: InitialStateTypes = {
     carFeature: [],
     availableFrom: "any",
     priceRange:[null, null],
-    coordinates: [33.57, 7.58], // Default coordinates for Casablanca
+    coordinates: [-7.5, 33.5], // Default coordinates for Casablanca
     carBrand: "any",
     fuelType: "any",
     transmission: "any",

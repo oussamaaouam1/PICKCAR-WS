@@ -88,5 +88,41 @@
     "address": "789 Rodeo Dr",
     "postalCode": "90210",
     "coordinates": "POINT(-118.400356 34.073620)"
+  },
+  {
+    "id": 12,
+    "country": "Morocco",
+    "city": "Casablanca",
+    "state": "Casablanca-Settat",
+    "address": "45 Boulevard Mohammed V",
+    "postalCode": "20000",
+    "coordinates": "POINT(-7.612843 33.593110)"
+  },
+  {
+    "id": 13,
+    "country": "Morocco",
+    "city": "Casablanca",
+    "state": "Casablanca-Settat",
+    "address": "78 Rue Zerktouni",
+    "postalCode": "20000",
+    "coordinates": "POINT(-7.599843 33.583110)"
+  },
+  {
+    "id": 14,
+    "country": "Morocco",
+    "city": "Casablanca",
+    "state": "Casablanca-Settat",
+    "address": "123 Ain Diab",
+    "postalCode": "20000",
+    "coordinates": "POINT(-7.649843 33.563110)"
+  },
+  {
+    "id": 15,
+    "country": "Morocco",
+    "city": "Casablanca",
+    "state": "Casablanca-Settat",
+    "address": "56 Maarif",
+    "postalCode": "20000",
+    "coordinates": "POINT(-7.629843 33.573110)"
   }
 ]

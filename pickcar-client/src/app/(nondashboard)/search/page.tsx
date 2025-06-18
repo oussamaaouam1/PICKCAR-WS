@@ -15,33 +15,32 @@ const SearchPage = () => {
   const isFiltersFullOpen = useAppSelector(
     (state) => state.global.isFiltersFullOpen
   );
-  useEffect(()=>{
+  useEffect(() => {
     const initialFilters = Array.from(searchParams.entries()).reduce(
-      (acc : any ,[key, value]) =>{
-        if(key=== "priceRange"){
-          acc[key] = value.split(",").map((v) =>(v === "" ? null : Number(v)))
-        } else if (key === "coordinates"){
-          acc[key] = value.split(",").map(Number)
+      (acc: any, [key, value]) => {
+        if (key === "priceRange") {
+          acc[key] = value.split(",").map((v) => (v === "" ? null : Number(v)));
+        } else if (key === "coordinates") {
+          acc[key] = value.split(",").map(Number);
         } else {
-          acc[key] = value ==="any" ?null : value;
+          acc[key] = value === "any" ? null : value;
         }
         return acc;
       },
       {}
-    )
+    );
     const cleanedFilters = cleanParams(initialFilters);
-    dispatch(setFilters(cleanedFilters))
-  },[dispatch,searchParams])
+    dispatch(setFilters(cleanedFilters));
+  }, [dispatch, searchParams]);
   return (
     <div
       className="w-full mx-auto px-5 flex flex-col"
       style={{
-        height: `calc(100vh-${NAVBAR_HEIGHT}px)`,
-        // marginTop: `${NAVBAR_HEIGHT}px`,
+        height: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
       }}
     >
       <FiltersBar />
-      <div className="flex justify-between flex-1 overflow-hidden gap-3 mb-5">
+      <div className="flex flex-1 gap-3 justify-between overflow-hidden mb-5">
         <div
           className={`h-full overflow-auto transition-all duration-300 ease-in-out ${
             isFiltersFullOpen
@@ -49,12 +48,12 @@ const SearchPage = () => {
               : "w-0 opacity-0 invisible"
           }`}
         >
-          {/* FiltersBar component can be placed here */}
           <FiltersFullBar />
-        </div> 
-        <Map />
+        </div>
+          <Map />
+
         <div className="basis-4/12 overflow-y-auto">
-        {/* <Listings /> */}
+          {/* <Listings /> */}
         </div>
       </div>
     </div>

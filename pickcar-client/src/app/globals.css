@@ -161,6 +161,7 @@ body,
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -169,9 +170,7 @@ body,
 /* Amplify UI Overrides */
 [data-amplify-authenticator] {
   --amplify-components-button-primary-background-color: var(--primary);
-  --amplify-components-button-primary-hover-background-color: hsl(
-    var(--primary) / 0.9
-  );
+  --amplify-components-button-primary-hover-background-color: hsl(var(--primary) / 0.9);
   --amplify-components-button-border-radius: var(--radius);
   --amplify-components-fieldcontrol-border-radius: var(--radius);
 }
@@ -248,4 +247,40 @@ body,
 /* Sonner Toast Styles */
 [data-close-button="true"] {
   @apply bg-background border-border text-foreground hover:bg-muted;
+}
+
+.map-wrapper {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.map-container {
+  position: relative !important;
+  flex: 1;
+  min-height: 0;
+  /* Important for flex layout */
+}
+
+.mapboxgl-map {
+  position: absolute !important;
+  height: 100% !important;
+  width: 100% !important;
+}
+
+.mapboxgl-control-container {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+/* Ensure attribution stays in view */
+.mapboxgl-ctrl-bottom-right,
+.mapboxgl-ctrl-bottom-left {
+  position: absolute !important;
+  bottom: 0 !important;
 }
