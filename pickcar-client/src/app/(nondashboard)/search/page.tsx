@@ -7,7 +7,7 @@ import FiltersBar from "./FiltersBar";
 import FiltersFullBar from "./FiltersFullBar";
 import { cleanParams } from "@/lib/utils";
 import { setFilters } from "@/state";
-import Map from "./Map";
+import CarMap from "./Map";
 
 const SearchPage = () => {
   const searchParams = useSearchParams();
@@ -50,7 +50,7 @@ const SearchPage = () => {
         >
           <FiltersFullBar />
         </div>
-          <Map />
+          <CarMap />
 
         <div className="basis-4/12 overflow-y-auto">
           {/* <Listings /> */}
