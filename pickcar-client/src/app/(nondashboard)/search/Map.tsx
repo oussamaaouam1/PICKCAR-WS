@@ -16,7 +16,7 @@ function offsetCoordinates(cars: Car[]) {
     const count = coordMap.get(key) || 0;
     coordMap.set(key, count + 1);
 
-    // Offset by up to ±0.0001 per duplicate
+    // Offset by up to ±0.0003 per duplicate
     const offset = 0.0003 * count;
     return {
       ...car,
@@ -70,7 +70,7 @@ const CarMap = () => {
   }, [isLoading, isError, cars, filters.coordinates]);
 
   if (isLoading) return <>Loading...</>;
-  if (isError || !cars) return <div>Failed to fetch properties</div>;
+  if (isError || !cars) return <div>Failed to fetch Cars</div>;
 
   return (
     <div className="basis-5/12 grow relative rounded-xl">

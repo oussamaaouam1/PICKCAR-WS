@@ -20,7 +20,7 @@ interface InitialStateTypes {
 
 export const initialState: InitialStateTypes = {
   filters: {
-    location: "",
+    location: "Casablanca",
     seats: "any",
     // "any" is a placeholder for any number of seats
     carType: "any",
