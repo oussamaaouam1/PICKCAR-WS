@@ -1,4 +1,5 @@
 import Card from "@/components/Card";
+import CardCompact from "@/components/CardCompact";
 import {
   useAddFavoriteCarMutation,
   useGetAuthUserQuery,
@@ -56,18 +57,31 @@ const Listings = () => {
       <div className="flex">
         <div className="p-4 w-full">
           {cars?.map((car) =>
-            viewMode === "grid" ? <Card 
-            key={car.id}
-            car={car}
-            isFavorite= {
-              renter?.favorites?.some(
-                (fav:Car)=>fav.id === car.id
-              ) || false
-            }
-            onFavoriteToggle={() => handleFavoriteToggle(car.id)}
-            showFavoriteButton= {!!authUser}
-            carLink={`/search/${car.id}`}
-            />: <>an other card</>
+            viewMode === "grid" ? (
+              <Card
+                key={car.id}
+                car={car}
+                isFavorite={
+                  renter?.favorites?.some((fav: Car) => fav.id === car.id) ||
+                  false
+                }
+                onFavoriteToggle={() => handleFavoriteToggle(car.id)}
+                showFavoriteButton={!!authUser}
+                carLink={`/search/${car.id}`}
+              />
+            ) : (
+              <CardCompact
+                key={car.id}
+                car={car}
+                isFavorite={
+                  renter?.favorites?.some((fav: Car) => fav.id === car.id) ||
+                  false
+                }
+                onFavoriteToggle={() => handleFavoriteToggle(car.id)}
+                showFavoriteButton={!!authUser}
+                carLink={`/search/${car.id}`}
+              />
+            )
           )}
         </div>
       </div>

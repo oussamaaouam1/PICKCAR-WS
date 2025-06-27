@@ -68,7 +68,7 @@ const Card = ({
               </span>
             </div>
             <p className="text-lg font-bold mb-3 font-michroma">
-              ${car.pricePerDay}{" "}
+              MAD{car.pricePerDay}{" "}
               <span className="text-gray-600 text-base font-normal font-michroma">
                 {" "}
                 /Day
