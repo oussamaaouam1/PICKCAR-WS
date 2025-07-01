@@ -11,7 +11,7 @@ const Card = ({
   isFavorite,
 }: CardProps) => {
   const [imgSrc, setImgSrc] = useState(
-    car.photoUrls?.[0] || "/placeholder.jpg"
+    car.photoUrls?.[0] || "/cartypes/suv3.jpg"
   );
   return (
     <div className="bg-white rounded-xl overflow-hidden shadow-lg w-full mb-5">
@@ -71,7 +71,7 @@ const Card = ({
               MAD{car.pricePerDay}{" "}
               <span className="text-gray-600 text-base font-normal font-michroma">
                 {" "}
-                /Day
+                /Day 
               </span>
             </p>
           </div>

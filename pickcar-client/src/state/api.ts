@@ -18,7 +18,7 @@ export const api = createApi({
     },
   }),
   reducerPath: "api",
-  tagTypes: ["Managers", "Renters", "Cars"],
+  tagTypes: ["Managers", "Renters", "Cars","CarDetails"],
   endpoints: (build) => ({
     getAuthUser: build.query<User, void>({
       queryFn: async (_, _queryApi, _extraoptions, fetchWithBQ) => {
@@ -108,6 +108,11 @@ export const api = createApi({
           : [{ type: "Cars", id: "LIST" }],
     }),
 
+    getCar: build.query<Car, number>({
+      query: (id) => `cars/${id}`,
+      providesTags: (result, error, id) => [{ type: "CarDetails", id }],
+    }),
+
     //renter related end points
 
     getRenter: build.query<Renter, string>({
@@ -160,6 +165,7 @@ export const {
   useUpdateRenterSettingsMutation,
   useUpdateManagerSettingsMutation,
   useGetCarsQuery,
+  useGetCarQuery,
   useGetRenterQuery,
   useAddFavoriteCarMutation,
   useRemoveFavoriteCarMutation,

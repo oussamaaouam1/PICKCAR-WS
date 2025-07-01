@@ -11,7 +11,7 @@ const CardCompact = ({
   isFavorite,
 }: CardCompactProps) => {
   const [imgSrc, setImgSrc] = useState(
-    car.photoUrls?.[0] || "/placeholder.jpg"
+    car.photoUrls?.[0] || "/cartypes/suv3.jpg"
   );
   return (
     <div className="bg-white rounded-xl overflow-hidden shadow-lg w-full flex h-40 mb-5">
@@ -50,7 +50,7 @@ const CardCompact = ({
               >
                 <Heart
                   className={`w-4 h-4 ${
-                    isFavorite ? "text-red-500 fill-red-500" : "text-gray-600"
+                    isFavorite ? "text-red-500 fill-red-500" : "text-gray-600 cursor-pointer hover:fill-red-500"
                   }`}
                 />
               </button>
