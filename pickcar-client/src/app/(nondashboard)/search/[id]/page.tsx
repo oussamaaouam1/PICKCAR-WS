@@ -5,6 +5,7 @@ import React from "react";
 import ImagePreviews from "./ImagePreviews";
 import CarOverview from "./CarOverview";
 import CarDetails from "./CarDetails";
+import CarLocation from "./CarLocation";
 
 const SingleListing = () => {
   const { id } = useParams();
@@ -21,6 +22,7 @@ const SingleListing = () => {
       <div className="order-2 md:order-1">
         <CarOverview carId= {carId}/>
         <CarDetails carId={carId} />
+        <CarLocation carId={carId} />
       </div>
       </div>
     </div>

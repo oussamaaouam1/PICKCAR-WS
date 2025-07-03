@@ -63,7 +63,7 @@ const CarOverview = ({ carId }: CarOverviewProps) => {
       </div>
       {/* Summary  */}
       <div className="my-16">
-        <h2 className="text-xl font-semibold mb-5"> About {car.name}</h2>
+        <h2 className="text-xl font-semibold mb-5 font-michroma"> About {car.name}</h2>
         <p className="text-gray-500 leading-7 font-michroma ">
           {car.description ||
             "This car is a great choice for your next adventure. It offers comfort, style, and reliability. Whether you're going on a road trip or just need a vehicle for daily use, this car has got you covered. Enjoy the ride!"}

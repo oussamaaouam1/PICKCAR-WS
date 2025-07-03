@@ -16,6 +16,7 @@ import {
   MapPin,
   Bluetooth,
   Baby,
+  SunSnow
 } from "lucide-react";
 
 // Car Features (Amenities) Enum
@@ -43,7 +44,7 @@ export const CarFeatureIcons: Record<CarFeatureEnum, LucideIcon> = {
   ParkingSensors: Car,
   CruiseControl: Gauge,
   // LeatherSeats: Seat,
-  AirConditioning: Thermometer,
+  AirConditioning: SunSnow,
   AlloyWheels: Car,
   ChildSeat: Baby,
   AutomaticTransmission: Cog,
