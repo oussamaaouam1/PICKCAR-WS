@@ -48,10 +48,9 @@ const CarLocation = ({ carId }: CarDetailsProps) => {
         <div className="flex items-center text-gray-500 font-michroma">
           <MapPin className="w-4 h-4 mr-1 text-gray-700" />
           Car Address :
-          <span className="ml-2 font-semibold text-gray-700 font-michroma">
+          <span className="ml-2 font-semibold text-gray-700 font-michroma pr-8">
             {car.location.address || "Address not available"}
           </span>
-        </div>
         <a
           href={`https://maps.google.com/?q=${encodeURIComponent(
             car.location?.address || ""
@@ -63,6 +62,7 @@ const CarLocation = ({ carId }: CarDetailsProps) => {
           <Compass className="w-5 h-5" />
           Get Directions
         </a>
+        </div>
       </div>
       <div
         className="relative mt-4 h-48 md:h-56 max-h-1/4 max-w-2xl mx-auto rounded-xl border border-gray-200 shadow overflow-hidden bg-gray-100"

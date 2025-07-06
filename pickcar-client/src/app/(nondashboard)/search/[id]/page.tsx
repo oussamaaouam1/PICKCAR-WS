@@ -6,14 +6,16 @@ import ImagePreviews from "./ImagePreviews";
 import CarOverview from "./CarOverview";
 import CarDetails from "./CarDetails";
 import CarLocation from "./CarLocation";
+import ContactWidget from "./ContactWidget";
 
 const SingleListing = () => {
   const { id } = useParams();
   const carId = Number(id);
   const {data:authUser} = useGetAuthUserQuery();
+  const [IsModalOpen, setIsModalOpen] = React.useState(false)
 
   return (
-    <div>
+    <div className="">
       {/* This is where you would fetch and display the details of a single listing */}
       <ImagePreviews
       images= {["/singlelisting-2.jpg","/singlelisting-3.jpg"]}
@@ -23,6 +25,9 @@ const SingleListing = () => {
         <CarOverview carId= {carId}/>
         <CarDetails carId={carId} />
         <CarLocation carId={carId} />
+      </div>
+      <div className="order-1 md:order-2">
+        <ContactWidget onOpenModal = {()=> setIsModalOpen(true)}/>
       </div>
       </div>
     </div>

@@ -11,6 +11,7 @@ const CarDetails = ({ carId }: CarDetailsProps) => {
   if (isError || !car) {
     return <>Car not found !</>;
   }
+  console.log("car",car)
   return (
     <div className="mb-6">
       {/* car features */}
