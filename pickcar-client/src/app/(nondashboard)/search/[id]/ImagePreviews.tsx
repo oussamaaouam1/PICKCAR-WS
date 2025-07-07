@@ -13,7 +13,7 @@ const ImagePreviews = ({ images }: ImagePreviewsProps) => {
     setCurrentImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
   return (
-    <div className="relative h-[450px] w-full">
+    <div className="relative h-[450px] w-full m-auto rounded-2xl">
       {images.map((image, index) => (
         <div
           className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${
