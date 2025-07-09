@@ -5,12 +5,13 @@ import Loading from "@/components/ui/Loading";
 import {
   useGetAuthUserQuery,
   // useGetCarQuery,
-  useGetCarsQuery,
+  // useGetCarsQuery,
+  useGetCurrentCarsQuery,
   useGetRenterQuery,
 } from "@/state/api";
 import React from "react";
 
-const Favorites = () => {
+const Cars = () => {
   const { data: authUser } = useGetAuthUserQuery();
   const { data: renter } = useGetRenterQuery(
     authUser?.cognitoInfo?.userId || "",
@@ -19,44 +20,43 @@ const Favorites = () => {
     }
   );
   const {
-    data: favoriteCars,
+    data: currentCars,
     isLoading,
     error,
-  } = useGetCarsQuery(
-    { favoriteIds: renter?.favorites?.map((fav: { id: number }) => fav.id) },
-    { skip: !renter?.favorites || renter?.favorites.length === 0 }
-  );
+  } = useGetCurrentCarsQuery(authUser?.cognitoInfo?.userId || "", {
+    skip: !authUser?.cognitoInfo?.userId,
+  });
   if (isLoading) return <Loading />;
   if (error)
     return (
-      <div className="font-michroma font-bold">Error loading favorites</div>
+      <div className="font-michroma font-bold">Error loading current Cars</div>
     );
   return (
     <div>
       <Header
-        title="Favorites Cars"
-        subtitle="Brows and manage your saved Cars"
+        title="Current Cars"
+        subtitle="View and manage your current Cars"
       />
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 m-5">
-        {favoriteCars?.map((car) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {currentCars?.map((car) => (
           <Card
             key={car.id}
             car={car}
-            isFavorite={true}
+            isFavorite={renter?.favorites.includes(car.id) || false}
             onFavoriteToggle={() => {}}
             showFavoriteButton={false}
             carLink={`/renter/cars/${car.id}`}
           />
         ))}
       </div>
-      {(!favoriteCars || favoriteCars.length === 0) && (
+      {(!currentCars || currentCars.length === 0) && (
         <p className="font-semibold font-michroma text-primary-250">
           {" "}
-          You don&apos;t Any Favorite Cars
+          You don&apos;t Any Current Cars
         </p>
       )}
     </div>
   );
 };
 
-export default Favorites;
+export default Cars;

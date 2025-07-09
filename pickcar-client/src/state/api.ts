@@ -1,5 +1,5 @@
 import { cleanParams, createNewUserInDatabase } from "@/lib/utils";
-import { Car, Manager, Renter } from "@/types/prismaTypes";
+import { Car, Manager, Payment, Renter, Reservation } from "@/types/prismaTypes";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth";
 import { FiltersState } from ".";
@@ -18,7 +18,7 @@ export const api = createApi({
     },
   }),
   reducerPath: "api",
-  tagTypes: ["Managers", "Renters", "Cars","CarDetails"],
+  tagTypes: ["Managers", "Renters", "Cars", "CarDetails","Reservations","Payments"],
   endpoints: (build) => ({
     getAuthUser: build.query<User, void>({
       queryFn: async (_, _queryApi, _extraoptions, fetchWithBQ) => {
@@ -119,6 +119,16 @@ export const api = createApi({
       query: (cognitoId) => `renters/${cognitoId}`,
       providesTags: (result) => [{ type: "Renters", id: result?.id }],
     }),
+    getCurrentCars: build.query<Car[], string>({
+      query: (cognitoId) => `renters/${cognitoId}/current-cars`,
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: "Cars" as const, id })),
+              { type: "Cars", id: "LIST" },
+            ]
+          : [{ type: "Cars", id: "LIST" }],
+    }),
 
     updateRenterSettings: build.mutation<
       Renter,
@@ -157,6 +167,16 @@ export const api = createApi({
         { type: "Cars", id: "LIST" },
       ],
     }),
+    // reservation related endpoint
+
+    getReservations: build.query<Reservation[], number>({
+      query:() =>"reservations",
+      providesTags : ["Reservations"]
+    }),
+    getPayments: build.query<Payment[], number>({
+      query:(reservationId) =>`reservations/${reservationId}/payments`,
+      providesTags : ["Payments"]
+    })
   }),
 });
 
@@ -166,7 +186,10 @@ export const {
   useUpdateManagerSettingsMutation,
   useGetCarsQuery,
   useGetCarQuery,
+  useGetCurrentCarsQuery,
   useGetRenterQuery,
   useAddFavoriteCarMutation,
   useRemoveFavoriteCarMutation,
+  useGetReservationsQuery,
+  useGetPaymentsQuery,
 } = api;
