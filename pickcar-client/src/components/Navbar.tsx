@@ -65,7 +65,7 @@ export const Navbar = () => {
                 router.push(
                   authUser.userRole?.toLowerCase() === "manager"
                     ? "/managers/new-car"
-                    : "/renters/search"
+                    : "/search"
                 );
               }}
             >

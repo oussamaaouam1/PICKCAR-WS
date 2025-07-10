@@ -46,7 +46,7 @@ const AppSidebar = ({ userType }: AppSidebarProps) => {
             href: "/renters/applications",
           },
           { icon: Settings, label: "Settings", href: "/renters/settings" },
-          { icon: Car, label: "Cars", href: "/renters/Cars" },
+          { icon: Car, label: "Cars", href: "/renters/cars" },
         ];
   return (
     <div>
