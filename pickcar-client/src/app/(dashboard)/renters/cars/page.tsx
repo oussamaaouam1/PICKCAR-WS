@@ -32,7 +32,7 @@ const Cars = () => {
       <div className="font-michroma font-bold">Error loading current Cars</div>
     );
   return (
-    <div>
+    <div className="dashboard-container w-full">
       <Header
         title="Current Cars"
         subtitle="View and manage your current Cars"
@@ -50,7 +50,7 @@ const Cars = () => {
         ))}
       </div>
       {(!currentCars || currentCars.length === 0) && (
-        <p className="font-semibold font-michroma text-primary-250">
+        <p className="font-semibold font-michroma text-primary-250 w-full text-center">
           {" "}
           You don&apos;t Any Current Cars
         </p>

@@ -1,5 +1,11 @@
 import { cleanParams, createNewUserInDatabase } from "@/lib/utils";
-import { Car, Manager, Payment, Renter, Reservation } from "@/types/prismaTypes";
+import {
+  Car,
+  Manager,
+  Payment,
+  Renter,
+  Reservation,
+} from "@/types/prismaTypes";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth";
 import { FiltersState } from ".";
@@ -18,7 +24,14 @@ export const api = createApi({
     },
   }),
   reducerPath: "api",
-  tagTypes: ["Managers", "Renters", "Cars", "CarDetails","Reservations","Payments"],
+  tagTypes: [
+    "Managers",
+    "Renters",
+    "Cars",
+    "CarDetails",
+    "Reservations",
+    "Payments",
+  ],
   endpoints: (build) => ({
     getAuthUser: build.query<User, void>({
       queryFn: async (_, _queryApi, _extraoptions, fetchWithBQ) => {
@@ -167,16 +180,34 @@ export const api = createApi({
         { type: "Cars", id: "LIST" },
       ],
     }),
+
+    //manager related endpoints
+
+    getManagerCars: build.query<Car[], string>({
+      query: (cognitoId) => `managers/${cognitoId}/cars`,
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: "Cars" as const, id })),
+              { type: "Cars", id: "LIST" },
+            ]
+          : [{ type: "Cars", id: "LIST" }],
+    }),
+
     // reservation related endpoint
 
     getReservations: build.query<Reservation[], number>({
-      query:() =>"reservations",
-      providesTags : ["Reservations"]
+      query: () => "reservations",
+      providesTags: ["Reservations"],
+    }),
+    getCarReservations: build.query<Reservation, number>({
+      query: (carId) => `reservations/${carId}/reservations`,
+      providesTags:  [  "Reservations" ],
     }),
     getPayments: build.query<Payment[], number>({
-      query:(reservationId) =>`reservations/${reservationId}/payments`,
-      providesTags : ["Payments"]
-    })
+      query: (reservationId) => `reservations/${reservationId}/payments`,
+      providesTags: ["Payments"],
+    }),
   }),
 });
 
@@ -187,9 +218,11 @@ export const {
   useGetCarsQuery,
   useGetCarQuery,
   useGetCurrentCarsQuery,
+  useGetManagerCarsQuery,
   useGetRenterQuery,
   useAddFavoriteCarMutation,
   useRemoveFavoriteCarMutation,
   useGetReservationsQuery,
+  useGetCarReservationsQuery,
   useGetPaymentsQuery,
 } = api;
