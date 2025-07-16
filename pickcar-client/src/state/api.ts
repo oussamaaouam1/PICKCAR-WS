@@ -193,6 +193,7 @@ export const api = createApi({
             ]
           : [{ type: "Cars", id: "LIST" }],
     }),
+    
 
     // reservation related endpoint
 
@@ -201,7 +202,7 @@ export const api = createApi({
       providesTags: ["Reservations"],
     }),
     getCarReservations: build.query<Reservation, number>({
-      query: (carId) => `reservations/${carId}/reservations`,
+      query: (carId) => `cars/${carId}/reservations`,
       providesTags:  [  "Reservations" ],
     }),
     getPayments: build.query<Payment[], number>({

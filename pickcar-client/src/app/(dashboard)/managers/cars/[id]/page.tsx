@@ -47,12 +47,12 @@ const RentersCar = () => {
   };
 
   return (
-    <div className="dashboard-container">
+    <div className="dashboard-container w-full ">
       {/* Back to Cars page */}
 
       <Link
-        href="/manager/cars"
-        className="flex items-center mb-4 hover:text-primary-500 text-primary-700 font-semibold font-michroma"
+        href="/managers/cars"
+        className="flex items-center mb-4 hover:text-primary-500 text-primary-700 font-semibold font-michroma cursor-pointer"
         scroll={false}
       >
         <ArrowLeft className="w-4 h-4 mr-2" />
@@ -63,8 +63,8 @@ const RentersCar = () => {
         subtitle="Manage Renters and reservations for this Car"
       />
 
-      <div className="w-full space-y-6">
-        <div className="mt-8 bg-white rounded-xl shadow-md overflow-hidden p-6">
+      <div className="w-full space-y-6 m-auto">
+        <div className="mt-8 bg-white rounded-xl shadow-md overflow-hidden p-6 md:min-w-[800px]">
           <div className="flex justify-between items-center mb-4">
             <div>
               <h2 className="text-2xl font-bold mb-1 font-michroma">
@@ -75,22 +75,27 @@ const RentersCar = () => {
               </p>
             </div>
             <div>
-              <button className="bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-xl flex item-center justify-center hover:bg-primary-700">
+              <button className="bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-xl flex item-center justify-center hover:bg-primary-700 hover:text-white cursor-pointer">
                 <Download className="w-5 h-5 mr-2" />
                 <span>Download All</span>
               </button>
             </div>
           </div>
-          <hr className="mt-4 mb-1" />
+          <hr className="mt-4 mb-1 border-gray-500" />
           <div className="overflow-x-auto">
             <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Renter</TableHead>
-                  <TableHead>Reservation Period</TableHead>
-                  <TableHead>Current Payment Status</TableHead>
-                  <TableHead>Contact</TableHead>
-                  <TableHead>Action</TableHead>
+              <TableHeader className="text-gray-500 ">
+                <TableRow className="text-gray-500 border-gray-500">
+                  <TableHead className="text-gray-500">Renter</TableHead>
+                  <TableHead className="text-gray-500">
+                    Reservation Period
+                  </TableHead>
+                  <TableHead className="text-gray-500">Total price</TableHead>
+                  <TableHead className="text-gray-500">
+                    Current Payment Status
+                  </TableHead>
+                  <TableHead className="text-gray-500">Contact</TableHead>
+                  <TableHead className="text-gray-500">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -135,12 +140,18 @@ const RentersCar = () => {
                         }`}
                       >
                         {getCurrentPaymentStatus(reservation.id) === "Paid" && (
-                          <CheckCircle className="w-4 h-4 inline-block mr-1"/>
+                          <CheckCircle className="w-4 h-4 inline-block mr-1" />
                         )}
                         {getCurrentPaymentStatus(reservation.id)}
                       </span>
                     </TableCell>
                     <TableCell>{reservation.renter.phoneNumber}</TableCell>
+                    <TableCell>
+                      <button className="border border-gray-300 text-gray-700 py-2 px-4 rounded-md flex items-center justify-center font-semibold hover:bg-primary-700 hover:text-primary-50">
+                        <Download className="w-4 h-4 mr-1" />
+                        Download Agreement Or Invoice
+                      </button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

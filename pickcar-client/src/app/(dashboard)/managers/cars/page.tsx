@@ -38,7 +38,7 @@ const {
         ))}
       </div>
       {(!managerCars || managerCars.length === 0) && (
-        <p className="font-semibold font-michroma text-primary-250">
+        <p className="font-semibold font-michroma text-primary-250 m-5">
           {" "}
           You don&apos;t Any listed Cars
         </p>

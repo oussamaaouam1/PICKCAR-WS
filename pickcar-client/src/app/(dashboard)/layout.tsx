@@ -46,7 +46,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen h-full bg-primary-100">
+      <div className="min-h-screen w-full bg-primary-100">
         <Navbar />
         <div style={{ paddingTop: `${NAVBAR_HEIGHT}px` }}>
           <main className="flex">
