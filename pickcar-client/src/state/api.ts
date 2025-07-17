@@ -9,6 +9,7 @@ import {
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth";
 import { FiltersState } from ".";
+// import { create } from "lodash";
 // import { get } from "http";
 
 export const api = createApi({
@@ -71,7 +72,7 @@ export const api = createApi({
           };
         } catch (error: any) {
           return {
-            error: (error.message as Error) || "Could not fetch user data",
+            error: (error.message as Error) || "Could not fetch user data"
           };
         }
       },
@@ -194,6 +195,17 @@ export const api = createApi({
           : [{ type: "Cars", id: "LIST" }],
     }),
     
+    createCar: build.mutation<Car, FormData>({
+      query:(newCar) =>({
+        url: "cars",
+        method: "POST",
+        body: newCar,
+      }),
+      invalidatesTags: (result) =>[
+        { type: "Cars", id: "LIST" },
+        { type: "Managers", id: result?.manager?.id },
+      ]
+    }),
 
     // reservation related endpoint
 
@@ -220,6 +232,7 @@ export const {
   useGetCarQuery,
   useGetCurrentCarsQuery,
   useGetManagerCarsQuery,
+  useCreateCarMutation,
   useGetRenterQuery,
   useAddFavoriteCarMutation,
   useRemoveFavoriteCarMutation,

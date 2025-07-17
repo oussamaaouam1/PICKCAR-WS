@@ -63,9 +63,9 @@ const HeroSection = () => {
               />
             </div>
 
-            <Button className="w-full sm:w-auto bg-primary-700 text-white font-semibold rounded-xl hover:bg-primary-800 transition duration-300 ease-in-out py-6">
+            <Button className="w-full sm:w-auto bg-primary-700 text-white font-semibold rounded-xl hover:bg-primary-800 transition duration-300 ease-in-out py-6 cursor-pointer">
               <Search className="w-5 h-5 sm:mr-2" />
-              <span className="hidden sm:inline">Search</span>
+              <a href="http://localhost:3000/search" className="hidden sm:inline">Search</a>
             </Button>
           </div>
         </div>

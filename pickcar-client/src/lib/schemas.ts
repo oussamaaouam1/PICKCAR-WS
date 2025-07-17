@@ -1,18 +1,34 @@
 import * as z from "zod";
 import { CarFeatureEnum, CarTypeEnum } from "./constants";
+// import { add } from "lodash";
 
 // Car Listing Schema
 export const carListingSchema = z.object({
   name: z.string().min(1, "Car name is required"),
   description: z.string().min(1, "Description is required"),
-  pricePerDay: z.coerce.number().positive().min(0, "Price must be a positive number").int(),
+  pricePerDay: z.coerce
+    .number()
+    .positive()
+    .min(0, "Price must be a positive number")
+    .int(),
   availableFrom: z.coerce.date(),
   availableTo: z.coerce.date(),
   carType: z.nativeEnum(CarTypeEnum),
-  carFeatures: z.array(z.nativeEnum(CarFeatureEnum)).min(1, "At least one car feature is required"),
+  fuelType: z.enum(["combustion", "electric", "hybrid"]),
+  transmission: z.enum(["automatic", "manual", "All"]),
+  brand: z.string().min(1, "Brand is required"),
+  address: z.string().min(1, "Address is required"),
+  city: z.string().min(1, "City is required"),
+  state: z.string().min(1, "State is required"),
+  country: z.string().min(1, "Country is required"),
+  postalCode: z.string().min(1, "Postal code is required"),
+  seats: z.number().int().min(2, "At least 2 seats are required"),
+  carFeatures: z
+    .array(z.nativeEnum(CarFeatureEnum))
+    .min(1, "At least one car feature is required"),
   imageUrls: z.array(z.string().url()).min(1, "At least one image is required"),
   location: z.string().min(1, "Location is required"),
-  rating: z.coerce.number().min(0).max(5, "Rating must be between 0 and 5").optional(),
+  
 });
 
 export type CarListingData = z.infer<typeof carListingSchema>;
@@ -23,7 +39,7 @@ export const applicationSchema = z.object({
   email: z.string().email("Invalid email address"),
   phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
   message: z.string().optional(),
-  carId: z.number().positive().int(),  // To reference the car being rented
+  carId: z.number().positive().int(), // To reference the car being rented
 });
 
 export type ApplicationData = z.infer<typeof applicationSchema>;
@@ -76,5 +92,5 @@ export const settingsSchema = z.object({
 });
 export type SettingsFormData = z.infer<typeof settingsSchema>;
 
-
 export type CarFeatureData = z.infer<typeof carFeatureSchema>;
+export type CarFormData = z.infer<typeof carListingSchema>;
