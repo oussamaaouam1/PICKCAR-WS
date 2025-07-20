@@ -76,5 +76,5 @@ const HeroSection = () => {
     </div>
   );
 };
-
 export default HeroSection;
+

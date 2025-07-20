@@ -11,6 +11,7 @@ export const carListingSchema = z.object({
     .positive()
     .min(0, "Price must be a positive number")
     .int(),
+  applicationFee: z.coerce.number().positive().min(0).int(),
   availableFrom: z.coerce.date(),
   availableTo: z.coerce.date(),
   carType: z.nativeEnum(CarTypeEnum),
@@ -26,9 +27,10 @@ export const carListingSchema = z.object({
   carFeatures: z
     .array(z.nativeEnum(CarFeatureEnum))
     .min(1, "At least one car feature is required"),
-  imageUrls: z.array(z.string().url()).min(1, "At least one image is required"),
-  location: z.string().min(1, "Location is required"),
-  
+  imageUrls: z
+    .array(z.instanceof(File))
+    .min(1, "At least one photo is required"),
+  // location: z.string().min(1, "Location is required"),
 });
 
 export type CarListingData = z.infer<typeof carListingSchema>;
