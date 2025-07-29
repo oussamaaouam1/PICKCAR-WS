@@ -198,22 +198,22 @@ export const createCar = async (req: Request, res: Response): Promise<void> => {
       managerCognitoId,
       ...carData
     } = req.body;
-    //photos Upload to S3
-    const photoUrls = await Promise.all(
-      files.map(async (file) => {
-        const uploadParams = {
-          Bucket: process.env.AWS_S3_BUCKET_NAME || "",
-          Key: `cars/${Date.now()}-${file.originalname}`,
-          Body: file.buffer,
-          ContentType: file.mimetype,
-        };
-        const uploadResult = await new Upload({
-          client: s3Client,
-          params: uploadParams,
-        }).done();
-        return uploadResult.Location;
-      })
-    );
+    //Images Upload to S3
+    // const imageUrls = await Promise.all(
+    //   files.map(async (file) => {
+    //     const uploadParams = {
+    //       Bucket: process.env.AWS_S3_BUCKET_NAME || "",
+    //       Key: `cars/${Date.now()}-${file.originalname}`,
+    //       Body: file.buffer,
+    //       ContentType: file.mimetype,
+    //     };
+    //     const uploadResult = await new Upload({
+    //       client: s3Client,
+    //       params: uploadParams,
+    //     }).done();
+    //     return uploadResult.Location;
+    //   })
+    // );
     // Geocoding the address using OpenStreetMap Nominatim API
     const geocodingUrl = `https://nominatim.openstreetmap.org/search?${new URLSearchParams(
       {
@@ -236,7 +236,7 @@ export const createCar = async (req: Request, res: Response): Promise<void> => {
             parseFloat(geocodingResponse.data[0].lon),
             parseFloat(geocodingResponse.data[0].lat),
           ]
-        : [null, null];
+        : [0, 0];
 
     // Create the location entry
     const [location] = await prisma.$queryRaw<Location[]>`
@@ -254,29 +254,34 @@ export const createCar = async (req: Request, res: Response): Promise<void> => {
     const newCar = await prisma.car.create({
       data: {
         ...carData,
-        photos: photoUrls,
+        // images: imageUrls,
         locationId: location.id,
+
         managerCognitoId,
-        CarFeatures:
+        carFeatures:
           typeof carData.carFeatures === "string"
             ? carData.carFeatures.split(",")
             : [],
-        CarType: carData.carType as CarType,
+        carType: carData.carType as CarType,
         transmission: carData.transmission as TransmissionType,
-        FuelType: carData.fuelType as FuelType,
+        fuelType: carData.fuelType as FuelType,
         seats: parseFloat(carData.seats as string), // Ensure seats is a number you can use Number(carData.seats) if it's a string
         brand: carData.brand as string,
-        pricePerDay: parseFloat(carData.pricePerDay as string),
+        applicationFee: parseFloat(carData.applicationFee),
+        pricePerDay: parseFloat(carData.pricePerDay),
       },
       include: {
         location: true,
         manager: true,
       },
     });
-    res.status(201).json({
+    res.status(201).json(
+      {
       message: "Car created successfully",
-      car: newCar,
-    });
+      car:
+      newCar
+    }
+  );
   } catch (error: any) {
     res.status(500).json({ message: `Error creating car: ${error.message}` });
   }

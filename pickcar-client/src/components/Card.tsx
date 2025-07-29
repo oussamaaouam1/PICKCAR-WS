@@ -11,7 +11,7 @@ const Card = ({
   isFavorite,
 }: CardProps) => {
   const [imgSrc, setImgSrc] = useState(
-    car.photoUrls?.[0] || "/cartypes/suv3.jpg"
+    car.imageUrls?.[0] || "/cartypes/suv3.jpg"
   );
   return (
     <div className="bg-white rounded-xl overflow-hidden shadow-lg w-full mb-5">

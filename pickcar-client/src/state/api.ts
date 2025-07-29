@@ -1,5 +1,6 @@
 import { cleanParams, createNewUserInDatabase } from "@/lib/utils";
 import {
+  Application,
   Car,
   Manager,
   Payment,
@@ -9,6 +10,7 @@ import {
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth";
 import { FiltersState } from ".";
+// import { result } from "lodash";
 // import { create } from "lodash";
 // import { get } from "http";
 
@@ -32,6 +34,7 @@ export const api = createApi({
     "CarDetails",
     "Reservations",
     "Payments",
+    "Applications",
   ],
   endpoints: (build) => ({
     getAuthUser: build.query<User, void>({
@@ -72,7 +75,7 @@ export const api = createApi({
           };
         } catch (error: any) {
           return {
-            error: (error.message as Error) || "Could not fetch user data"
+            error: (error.message as Error) || "Could not fetch user data",
           };
         }
       },
@@ -194,17 +197,17 @@ export const api = createApi({
             ]
           : [{ type: "Cars", id: "LIST" }],
     }),
-    
+
     createCar: build.mutation<Car, FormData>({
-      query:(newCar) =>({
+      query: (newCar) => ({
         url: "cars",
         method: "POST",
         body: newCar,
       }),
-      invalidatesTags: (result) =>[
+      invalidatesTags: (result) => [
         { type: "Cars", id: "LIST" },
         { type: "Managers", id: result?.manager?.id },
-      ]
+      ],
     }),
 
     // reservation related endpoint
@@ -215,11 +218,42 @@ export const api = createApi({
     }),
     getCarReservations: build.query<Reservation, number>({
       query: (carId) => `cars/${carId}/reservations`,
-      providesTags:  [  "Reservations" ],
+      providesTags: ["Reservations"],
     }),
     getPayments: build.query<Payment[], number>({
       query: (reservationId) => `reservations/${reservationId}/payments`,
       providesTags: ["Payments"],
+    }),
+    //applications related endpoints
+    getApplications: build.query<
+      Application[],
+      { userId?: string; userType?: string }
+    >({
+      query: (params) => {
+        const queryParams = new URLSearchParams();
+        if (params.userId) {
+          queryParams.append("userId", params.userId.toString());
+        }
+        if (params.userType) {
+          queryParams.append("userType", params.userType.toString());
+        }
+
+        return `applications?${queryParams.toString()}`;
+      },
+      providesTags: ["Applications"],
+    }),
+    updateApplicationStatus: build.mutation<
+      Application & { reservation?: Reservation },
+      { id: number; status: string }
+    >({
+      query: ({ id, status }) => ({
+        url: `applications/${id}/status`,
+        method: "PUT",
+        body: { status },
+      }),
+      invalidatesTags: [
+        "Applications","Reservations"
+      ]
     }),
   }),
 });
@@ -239,4 +273,6 @@ export const {
   useGetReservationsQuery,
   useGetCarReservationsQuery,
   useGetPaymentsQuery,
+  useGetApplicationsQuery,
+  useUpdateApplicationStatusMutation
 } = api;

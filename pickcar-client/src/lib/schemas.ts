@@ -12,8 +12,8 @@ export const carListingSchema = z.object({
     .min(0, "Price must be a positive number")
     .int(),
   applicationFee: z.coerce.number().positive().min(0).int(),
-  availableFrom: z.coerce.date(),
-  availableTo: z.coerce.date(),
+  // availableFrom: z.coerce.date(),
+  // availableTo: z.coerce.date(),
   carType: z.nativeEnum(CarTypeEnum),
   fuelType: z.enum(["combustion", "electric", "hybrid"]),
   transmission: z.enum(["automatic", "manual", "All"]),
@@ -23,13 +23,17 @@ export const carListingSchema = z.object({
   state: z.string().min(1, "State is required"),
   country: z.string().min(1, "Country is required"),
   postalCode: z.string().min(1, "Postal code is required"),
-  seats: z.number().int().min(2, "At least 2 seats are required"),
+  seats: z.coerce
+    .number()
+    .positive()
+    .min(2, "seats must be a positive number grater than 2")
+    .int(),
   carFeatures: z
-    .array(z.nativeEnum(CarFeatureEnum))
+    .string(z.nativeEnum(CarFeatureEnum))
     .min(1, "At least one car feature is required"),
   imageUrls: z
     .array(z.instanceof(File))
-    .min(1, "At least one photo is required"),
+    .min(1, "At least one image is required"),
   // location: z.string().min(1, "Location is required"),
 });
 

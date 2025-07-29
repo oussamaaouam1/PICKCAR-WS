@@ -12,7 +12,7 @@ router.get("/",getCars)
 router.get("/:id",getCar)
 router.post("/",
   authMiddleware(["manager"]),
-  upload.array("photos"),
+  upload.array("images"),
   createCar)
 
 

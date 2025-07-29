@@ -79,8 +79,8 @@ model Car {
   name          String
   description   String
   pricePerDay   Float
-  availableFrom DateTime
-  availableTo   DateTime
+  availableFrom DateTime?
+  availableTo   DateTime?
   carType       CarType
   carFeatures   CarFeature[]
 
@@ -94,6 +94,8 @@ model Car {
   rating           Float?   @default(0)
   numberOfReviews  Int?     @default(0)
   managerCognitoId String
+  postedDate       DateTime @default(now())
+  applicationFee   Float?
 
   manager      Manager       @relation(fields: [managerCognitoId], references: [cognitoId])
   location     Location      @relation(fields: [locationId], references: [id])
