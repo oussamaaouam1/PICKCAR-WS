@@ -33,7 +33,7 @@ const {
             isFavorite={false}
             onFavoriteToggle={() => {}}
             showFavoriteButton={false}
-            carLink={`/manager/cars/${car.id}`}
+            carLink={`/managers/cars/${car.id}`}
           />
         ))}
       </div>

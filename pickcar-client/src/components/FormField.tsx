@@ -46,10 +46,11 @@ interface FormFieldProps {
     | "password"
     | "file"
     | "multi-input";
-    // | "date";
+  // | "date";
   placeholder?: string;
   options?: { value: string; label: string }[];
   accept?: string;
+  onChange?: (event: any) => void; // Add this line
   className?: string;
   labelClassName?: string;
   inputClassName?: string;
@@ -74,6 +75,7 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
   multiple = false,
   isIcon = false,
   initialValue,
+  onChange, // Add this line
 }) => {
   const { control } = useFormContext();
 
@@ -95,10 +97,14 @@ export const CustomFormField: React.FC<FormFieldProps> = ({
           <Select
             value={field.value || (initialValue as string)}
             defaultValue={field.value || (initialValue as string)}
-            onValueChange={field.onChange}
+            // onValueChange={field.onChange}
+            onValueChange={(value) => {
+              field.onChange(value);
+              onChange?.(value); // Call the external onChange if provided
+            }}
           >
             <SelectTrigger
-              className={`w-full border-gray-200 p-4 ${inputClassName}`}
+              className={`w-full border-gray-200 p-4 cursor-pointer ${inputClassName}`}
             >
               <SelectValue placeholder={placeholder} />
             </SelectTrigger>

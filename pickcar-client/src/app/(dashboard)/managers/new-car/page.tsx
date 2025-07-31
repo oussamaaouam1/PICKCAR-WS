@@ -9,12 +9,57 @@ import { useCreateCarMutation, useGetAuthUserQuery } from "@/state/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
-// import { format } from 'url';
-// import { string } from 'zod';
+import { useState } from "react";
+import { Country, State, City } from "country-state-city";
+
+// Type definitions for country-state-city
+interface CountryType {
+  name: string;
+  isoCode: string;
+}
+
+interface StateType {
+  name: string;
+  isoCode: string;
+  countryCode: string;
+}
+
+interface CityType {
+  name: string;
+  stateCode: string;
+  countryCode: string;
+}
 
 const NewCar = () => {
   const [createCar] = useCreateCarMutation();
   const { data: authUser } = useGetAuthUserQuery();
+
+  // Country, state and city dropdowns
+  const [countries] = useState<CountryType[]>(Country.getAllCountries());
+  const [states, setStates] = useState<StateType[]>([]);
+  const [cities, setCities] = useState<CityType[]>([]);
+  const [selectedCountry, setSelectedCountry] = useState<CountryType | null>(null);
+  const [selectedState, setSelectedState] = useState<StateType | null>(null);
+
+  const handleCountryChange = (countryName: string) => {
+    const country = countries.find((c) => c.name === countryName);
+    if (country) {
+      setSelectedCountry(country);
+      const countryStates = State.getStatesOfCountry(country.isoCode);
+      setStates(countryStates);
+      setCities([]);
+      setSelectedState(null);
+    }
+  };
+
+  const handleStateChange = (stateCode: string) => {
+    const state = states.find((s) => s.isoCode === stateCode);
+    if (state && selectedCountry) {
+      setSelectedState(state);
+      const stateCities = City.getCitiesOfState(selectedCountry.isoCode, state.isoCode);
+      setCities(stateCities);
+    }
+  };
 
   const form = useForm<CarFormData>({
     resolver: zodResolver(carListingSchema),
@@ -23,11 +68,9 @@ const NewCar = () => {
       description: "",
       pricePerDay: 100,
       applicationFee: 20,
-      // availableFrom: new Date(),
-      // availableTo: new Date(),
       carType: CarTypeEnum.SUV,
       fuelType: "combustion",
-      transmission: "automatic",
+      transmission: "Automatic",
       brand: "",
       address: "",
       city: "",
@@ -36,13 +79,11 @@ const NewCar = () => {
       postalCode: "",
       seats: 2,
       carFeatures: "",
-      // imageUrls: [],
-      // location: ''
     },
   });
 
   const onSubmit = async (data: CarFormData) => {
-      console.log("onSubmit called", data);
+    console.log("onSubmit called", data);
     if (!authUser?.cognitoInfo?.userId) {
       throw new Error("No manager ID found");
     }
@@ -66,6 +107,7 @@ const NewCar = () => {
     await createCar(formData);
     console.log(form.formState.errors);
   };
+
   return (
     <div className="dashboard-container max-w-7xl m-auto p-6">
       <Header
@@ -157,7 +199,7 @@ const NewCar = () => {
                     placeholder="Select Transmission Type"
                     options={[
                       { value: "Automatic", label: "Automatic" },
-                      { value: ">Manual", label: "Manual" },
+                      { value: "Manual", label: "Manual" },
                       { value: "All", label: "All" },
                     ]}
                   />
@@ -188,11 +230,11 @@ const NewCar = () => {
                   Upload your Car Images
                 </h2>
                 <CustomFormField
-                name="imageUrls"
-                label="Car Images"
-                type="file"
-                accept="image/*"
-              />
+                  name="imageUrls"
+                  label="Car Images"
+                  type="file"
+                  accept="image/*"
+                />
               </div>
               <hr className="my-6 border-gray-200" />
               {/* Location and address */}
@@ -200,17 +242,42 @@ const NewCar = () => {
                 <h2 className="text-lg font-semibold mb-4">
                   Address & location
                 </h2>
-                <CustomFormField name="country" label="Country" />
+                <CustomFormField
+                  name="country"
+                  label="Country"
+                  type="select"
+                  placeholder="Select Country"
+                  options={countries.map((country) => ({
+                    value: country.name,
+                    label: country.name,
+                  }))}
+                  onChange={handleCountryChange}
+                />
                 <div className="flex justify-between gap-4">
-                  <CustomFormField
-                    name="city"
-                    label="City"
-                    className="w-full"
-                  />
                   <CustomFormField
                     name="state"
                     label="State"
                     className="w-full"
+                    type="select"
+                    disabled={!selectedCountry}
+                    placeholder="Select State"
+                    options={states.map((state) => ({
+                      value: state.isoCode,
+                      label: state.name,
+                    }))}
+                    onChange={handleStateChange}
+                  />
+                  <CustomFormField
+                    name="city"
+                    label="City"
+                    className="w-full"
+                    type="select"
+                    disabled={!selectedState}
+                    placeholder="Select City"
+                    options={cities.map((city) => ({
+                      value: city.name,
+                      label: city.name,
+                    }))}
                   />
                   <CustomFormField
                     name="postalCode"
@@ -221,12 +288,12 @@ const NewCar = () => {
                 <CustomFormField name="address" label="Address" />
               </div>
               <div className="flex justify-center">
-              <Button
-                type="submit"
-                className="bg-primary-700 text-white w-full max-w-3xl font-michroma cursor-pointer"
-              >
-                Create Car
-              </Button>
+                <Button
+                  type="submit"
+                  className="bg-primary-700 text-white w-full max-w-3xl font-michroma cursor-pointer"
+                >
+                  Create Car
+                </Button>
               </div>
             </form>
           </>

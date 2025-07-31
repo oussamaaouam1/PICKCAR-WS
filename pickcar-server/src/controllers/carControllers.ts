@@ -250,6 +250,12 @@ export const createCar = async (req: Request, res: Response): Promise<void> => {
         ST_SetSRID(ST_MakePoint(${longitude}, ${latitude}), 4326))
       RETURNING id, address, city, state, country, "postalCode", ST_asText(coordinates) as coordinates
       `;
+
+    // Reset the Car sequence to prevent unique constraint issues
+    await prisma.$executeRawUnsafe(
+      `SELECT setval('"Car_id_seq"', (SELECT COALESCE(MAX(id) + 1, 1) FROM "Car"), false)`
+    );
+
     // Create a car
     const newCar = await prisma.car.create({
       data: {
@@ -265,7 +271,7 @@ export const createCar = async (req: Request, res: Response): Promise<void> => {
         carType: carData.carType as CarType,
         transmission: carData.transmission as TransmissionType,
         fuelType: carData.fuelType as FuelType,
-        seats: parseFloat(carData.seats as string), // Ensure seats is a number you can use Number(carData.seats) if it's a string
+        seats: parseFloat(carData.seats as string),
         brand: carData.brand as string,
         applicationFee: parseFloat(carData.applicationFee),
         pricePerDay: parseFloat(carData.pricePerDay),
