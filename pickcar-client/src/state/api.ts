@@ -210,6 +210,14 @@ export const api = createApi({
       ],
     }),
 
+    deleteCar: build.mutation<{ message: string }, number>({
+      query: (carId) => ({
+        url: `cars/${carId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: () => [{ type: "Cars", id: "LIST" }],
+    }),
+
     // reservation related endpoint
 
     getReservations: build.query<Reservation[], number>({
@@ -251,9 +259,7 @@ export const api = createApi({
         method: "PUT",
         body: { status },
       }),
-      invalidatesTags: [
-        "Applications","Reservations"
-      ]
+      invalidatesTags: ["Applications", "Reservations"],
     }),
   }),
 });
@@ -267,6 +273,7 @@ export const {
   useGetCurrentCarsQuery,
   useGetManagerCarsQuery,
   useCreateCarMutation,
+  useDeleteCarMutation,
   useGetRenterQuery,
   useAddFavoriteCarMutation,
   useRemoveFavoriteCarMutation,

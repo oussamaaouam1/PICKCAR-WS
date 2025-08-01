@@ -49,11 +49,18 @@ const NewCar = () => {
       setStates(countryStates);
       setCities([]);
       setSelectedState(null);
+      console.log('this are what you choose ',selectedCountry,selectedState)
     }
+          console.log(
+            "this are what you choose ",
+            selectedCountry,
+            selectedState
+          );
+
   };
 
-  const handleStateChange = (stateCode: string) => {
-    const state = states.find((s) => s.isoCode === stateCode);
+  const handleStateChange = (stateName: string) => {
+    const state = states.find((s) => s.name === stateName);
     if (state && selectedCountry) {
       setSelectedState(state);
       const stateCities = City.getCitiesOfState(selectedCountry.isoCode, state.isoCode);
@@ -262,7 +269,7 @@ const NewCar = () => {
                     disabled={!selectedCountry}
                     placeholder="Select State"
                     options={states.map((state) => ({
-                      value: state.isoCode,
+                      value: state.name,
                       label: state.name,
                     }))}
                     onChange={handleStateChange}

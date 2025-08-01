@@ -64,7 +64,7 @@ export const getCars = async (req: Request, res: Response): Promise<void> => {
     if (fuelType && fuelType !== "any") {
       whereConditions.push(Prisma.sql`c."fuelType" = ${fuelType}::"FuelType"`);
     }
-    //car features past code 
+    //car features past code
     //     if(carFeature && carFeature !== "any"){
     //   const carFeatureArray = (carFeature as string).split(",").map(Number);
     //   whereConditions.push(
@@ -281,14 +281,62 @@ export const createCar = async (req: Request, res: Response): Promise<void> => {
         manager: true,
       },
     });
-    res.status(201).json(
-      {
+    res.status(201).json({
       message: "Car created successfully",
-      car:
-      newCar
-    }
-  );
+      car: newCar,
+    });
   } catch (error: any) {
     res.status(500).json({ message: `Error creating car: ${error.message}` });
   }
 };
+export const deleteCar = async (req:Request, res:Response): Promise<void> =>{
+  try{
+    const {id}= req.params;
+    const managerCognitoId = req.user?.id; //extract the cognito Id from auth middleware
+    if (!managerCognitoId){
+      res.status(401).json({message: "Unauthorized"});
+      return;
+
+    }
+    //check if the car exists
+    const car = await prisma.car.findFirst({
+      where : {
+        id:Number(id),
+        managerCognitoId: managerCognitoId,
+      },
+      include : {
+        reservations: true,
+        applications: true,
+        location: true,
+      }
+    });
+    if(!car){
+      res.status(404).json({message: "Car not found!"});
+      return;
+    }
+    //check if there are any reservations for the car
+    if(car.reservations.length > 0){
+      res.status(400).json({message: "Car has reservations and cannot be deleted!"});
+      return;
+    }
+    //check if there are any applications for the car
+    if(car.applications.length > 0){
+      res.status(400).json({message: "Car has applications and cannot be deleted!"});
+      return;
+    }
+    await prisma.$transaction(async(tx)=>{
+      //Delete applications
+      await tx.application.deleteMany({
+        where: {carId:Number(id)},
+      });
+      //Delete The car
+      await tx.car.delete({
+        where: {id:Number(id)},
+      });
+    })
+    res.status(200).json({message: "Car deleted with successfully"})
+  } catch(error: any){
+    console.error("Error deleting car:", error);
+    res.status(500).json({message: ` ${error.message}`});
+  }
+}
