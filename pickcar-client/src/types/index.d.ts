@@ -180,7 +180,13 @@ declare global {
     userInfo: Renter | Manager;
     userRole: JsonObject | JsonPrimitive | JsonArray;
   }
+  interface ApplicationCardProps {
+    application: Application;
+    userType: "manager" | "renter";
+    children: React.ReactNode;
+  }
 }
+
 
 // Export an empty object to make this a module
 export {};

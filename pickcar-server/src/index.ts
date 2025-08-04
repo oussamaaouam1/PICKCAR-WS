@@ -29,7 +29,7 @@ app.use(cors ());
 app.get('/',  (req, res) => {
     res.send('home route test');
 });
-app.use("applications",authMiddleware(["renter","manager"]),applicationRoutes)// application routes should be accessible by both renters and managers TO BE MODIFIED IF NOT WORKED (delete the auth option)
+app.use("/applications",authMiddleware(["renter","manager"]),applicationRoutes)// application routes should be accessible by both renters and managers TO BE MODIFIED IF NOT WORKED (delete the auth option)
 app.use("/cars", carRoutes)
 app.use("/reservation",reservationRoutes)
 app.use("/renters",authMiddleware(["renter"]), renterRoutes)
