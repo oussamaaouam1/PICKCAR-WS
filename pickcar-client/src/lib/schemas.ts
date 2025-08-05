@@ -45,7 +45,7 @@ export const applicationSchema = z.object({
   email: z.string().email("Invalid email address"),
   phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
   message: z.string().optional(),
-  carId: z.number().positive().int(), // To reference the car being rented
+  // carId: z.number().positive().int(), // To reference the car being rented
 });
 
 export type ApplicationData = z.infer<typeof applicationSchema>;
