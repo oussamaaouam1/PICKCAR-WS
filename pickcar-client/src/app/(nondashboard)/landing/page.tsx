@@ -7,7 +7,7 @@ import CitiesSection from "./CitiesSection";
 import Footer from "./Footer";
 import InfoSection2 from "./InfoSection2";
 
-const page = () => {
+const Landing = () => {
   return (
     <div className="overflow-hidden w-full">
       <HeroSection />
@@ -21,4 +21,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Landing;

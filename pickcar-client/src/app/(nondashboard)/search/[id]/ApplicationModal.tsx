@@ -24,8 +24,8 @@ const ApplicationModal = ({
     resolver: zodResolver(applicationSchema),
     defaultValues: {
       name: "",
-      email: "",
-      phoneNumber: "",
+      email: authUser?.userInfo.email,
+      phoneNumber:authUser?.userInfo.phoneNumber,
       message: "",
     },
   });
@@ -65,12 +65,14 @@ const ApplicationModal = ({
               name="email"
               label="Email"
               type="email"
+              disabled
               placeholder="Enter your email address"
             />
             <CustomFormField
               name="phoneNumber"
               label="Phone Number"
               type="text"
+              disabled
               placeholder="Enter your phone number"
             />
             <CustomFormField

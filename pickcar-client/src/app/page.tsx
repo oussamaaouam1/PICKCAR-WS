@@ -1,12 +1,18 @@
+import { Navbar } from "@/components/Navbar";
+import Landing from "./(nondashboard)/landing/page";
+// import { NAVBAR_HEIGHT } from "@/lib/constants";
 
 
 export default function Home() {
   return (
-    <div className="text-3xl font-bold underline text-red-500 text-center mt-10 bg-gray-100 font-michroma">
-      Hello world! This is the
-      <br />
-      <span className="text-blue-500 font-merase"> PickCar</span>
-      
-    </div>
+    <div>
+          <Navbar />
+          <main 
+            className="h-full flex flex-col w-full"
+            // style={{ paddingTop: `${NAVBAR_HEIGHT}px` }}
+          >
+            <Landing />
+          </main>
+        </div>
   );
 }

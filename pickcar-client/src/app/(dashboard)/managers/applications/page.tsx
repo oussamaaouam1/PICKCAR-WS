@@ -14,7 +14,7 @@ import Link from "next/link";
 
 const Applications = () => {
   const { data: authUser } = useGetAuthUserQuery();
-  const [activeTab, setActiveTab] = useState("all "); //all or pending or approved or Denied
+  const [activeTab, setActiveTab] = useState("all"); //all or pending or approved or Denied
 
   const {
     data: applications,
@@ -57,7 +57,7 @@ const Applications = () => {
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="all" className="">All</TabsTrigger>
           <TabsTrigger value="pending">Pending</TabsTrigger>
-          <TabsTrigger value="Approved">Approved</TabsTrigger>
+          <TabsTrigger value="approved">Approved</TabsTrigger>
           <TabsTrigger value="denied">Denied</TabsTrigger>
         </TabsList>
         {["all", "pending", "approved", "denied"].map((tab) => (
@@ -67,8 +67,10 @@ const Applications = () => {
                 (application) =>
                   tab === "all" || application.status.toLowerCase() === tab
                 // <></>
+                
               )
               .map((application) => (
+                
                 <ApplicationCard
                   key={application.id}
                   application={application}
