@@ -1,13 +1,53 @@
 "use client";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { CalendarDays, MapPin, Search } from "lucide-react";
+import { MapPin, Search } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
+import { setFilters } from "@/state";
 // import dynamic from "next/dynamic";
 
 const HeroSection = () => {
+  const dispatch = useDispatch();
+  const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
+  const handleLocationSearch = async () => {
+    try {
+      const trimmedQuery = searchQuery.trim();
+
+      if (!trimmedQuery) return;
+
+      const response = await fetch(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+          trimmedQuery
+        )}.json?access_token=${
+          process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
+        }&fuzzyMatch=true`
+      );
+      const data = await response.json();
+      if (data.features && data.features.length > 0) {
+        const [lng, lat] = data.features[0].center;
+        dispatch(
+          setFilters({
+            location: trimmedQuery,
+            coordinates: [lng, lat],
+          })
+        );
+        const params = new URLSearchParams({
+          location : trimmedQuery,
+          lat: lat.toString(),
+          lng:lng
+        })
+        router.push(`/search?${params.toString()}`)
+      }
+    } catch(error) {
+      console.error("error search location: " ,error)
+    }
+  };
+
   return (
     <div className="relative min-h-screen w-full">
       <Image
@@ -40,12 +80,14 @@ const HeroSection = () => {
               <MapPin className="text-primary-700 w-5 h-5 flex-shrink-0" />
               <Input
                 type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Pickup Location"
                 className="bg-transparent border-none focus:ring-0 focus:outline-none text-gray-900 placeholder-gray-500"
               />
             </div>
-
-            <div className="flex-1 flex items-center space-x-2 border-b sm:border-b-0 sm:border-r border-gray-200 p-2">
+            {/* if i add advanced search by using pickup date and returd date */}
+            {/* <div className="flex-1 flex items-center space-x-2 border-b sm:border-b-0 sm:border-r border-gray-200 p-2">
               <CalendarDays className="text-primary-700 w-5 h-5 flex-shrink-0" />
               <Input
                 type="text"
@@ -61,11 +103,20 @@ const HeroSection = () => {
                 placeholder="Return date"
                 className="bg-transparent border-none focus:ring-0 focus:outline-none text-gray-900 placeholder-gray-500"
               />
-            </div>
+            </div> */}
 
-            <Button className="w-full sm:w-auto bg-primary-700 text-white font-semibold rounded-xl hover:bg-primary-800 transition duration-300 ease-in-out py-6 cursor-pointer">
+            <Button
+              onClick={handleLocationSearch}
+              className="w-full sm:w-auto bg-primary-700 text-white font-semibold rounded-xl hover:bg-primary-800 transition duration-300 ease-in-out py-6 cursor-pointer"
+            >
               <Search className="w-5 h-5 sm:mr-2" />
-              <a href="http://localhost:3000/search" className="hidden sm:inline">Search</a>
+              {/* <a
+                href="http://localhost:3000/search"
+                className="hidden sm:inline"
+              >
+                Search
+              </a> */}
+              Search
             </Button>
           </div>
         </div>
@@ -77,4 +128,3 @@ const HeroSection = () => {
   );
 };
 export default HeroSection;
-
