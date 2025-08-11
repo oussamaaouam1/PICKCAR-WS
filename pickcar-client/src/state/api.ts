@@ -1,4 +1,4 @@
-import { cleanParams, createNewUserInDatabase } from "@/lib/utils";
+import { cleanParams, createNewUserInDatabase, withToast } from "@/lib/utils";
 import {
   Application,
   Car,
@@ -123,11 +123,21 @@ export const api = createApi({
               { type: "Cars", id: "LIST" },
             ]
           : [{ type: "Cars", id: "LIST" }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch cars",
+        });
+      },
     }),
 
     getCar: build.query<Car, number>({
       query: (id) => `cars/${id}`,
       providesTags: (result, error, id) => [{ type: "CarDetails", id }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to Load Car Details",
+        });
+      },
     }),
 
     //renter related end points
@@ -135,6 +145,11 @@ export const api = createApi({
     getRenter: build.query<Renter, string>({
       query: (cognitoId) => `renters/${cognitoId}`,
       providesTags: (result) => [{ type: "Renters", id: result?.id }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch renter Profile",
+        });
+      },
     }),
     getCurrentCars: build.query<Car[], string>({
       query: (cognitoId) => `renters/${cognitoId}/current-cars`,
@@ -145,6 +160,11 @@ export const api = createApi({
               { type: "Cars", id: "LIST" },
             ]
           : [{ type: "Cars", id: "LIST" }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch current cars",
+        });
+      },
     }),
 
     updateRenterSettings: build.mutation<
@@ -157,6 +177,12 @@ export const api = createApi({
         body: updatedRenter,
       }),
       invalidatesTags: (result) => [{ type: "Renters", id: result?.id }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to update renter settings",
+          success: "Renter settings updated successfully",
+        });
+      },
     }),
     addFavoriteCar: build.mutation<
       Renter,
@@ -267,7 +293,7 @@ export const api = createApi({
         method: "POST",
         body: body,
       }),
-      invalidatesTags:  ["Applications"],
+      invalidatesTags: ["Applications"],
     }),
   }),
 });
