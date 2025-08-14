@@ -28,6 +28,7 @@ export const Navbar = () => {
     await signOut(); // Sign out the user
     router.push("/landing"); // Redirect to the landing page
     window.location.href = "/landing"; // Refresh the page to ensure the sign-out is effective
+    console.log(authUser?.userRole?.toLowerCase());
   };
   return (
     <div
@@ -69,7 +70,7 @@ export const Navbar = () => {
                 );
               }}
             >
-              {authUser.userRole?.toLowerCase() === "manager" ? (
+              {authUser?.userRole?.toLowerCase() === "manager" ? (
                 <>
                   <Plus className="h-4 w-4 mr-2" />
                   <span className="hidden md:block ml-2">Add New Car</span>

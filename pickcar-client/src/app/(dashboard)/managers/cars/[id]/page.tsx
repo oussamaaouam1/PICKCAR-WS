@@ -16,6 +16,7 @@ import {
   // useGetManagerCarsQuery,
   useGetPaymentsQuery,
 } from "@/state/api";
+import { Reservation } from "@/types/prismaTypes";
 import { TableCell } from "@aws-amplify/ui-react";
 import { ArrowLeft, CheckCircle, Download } from "lucide-react";
 import Image from "next/image";
@@ -99,7 +100,7 @@ const RentersCar = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {reservations?.map((reservation) => (
+                {reservations?.map((reservation:Reservation) => (
                   <TableRow key={reservation.id} className="h-24">
                     <TableCell>
                       <div className="flex items-center space-x-3">

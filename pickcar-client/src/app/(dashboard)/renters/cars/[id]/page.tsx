@@ -1,3 +1,4 @@
+"use client"
 import Loading from "@/components/ui/Loading";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {

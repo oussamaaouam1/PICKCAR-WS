@@ -24,8 +24,8 @@ const ApplicationModal = ({
     resolver: zodResolver(applicationSchema),
     defaultValues: {
       name: "",
-      email: authUser?.userInfo.email,
-      phoneNumber:authUser?.userInfo.phoneNumber,
+      email: authUser?.userInfo?.email,
+      phoneNumber:authUser?.userInfo?.phoneNumber,
       message: "",
     },
   });

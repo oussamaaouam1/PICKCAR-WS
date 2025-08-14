@@ -9,6 +9,8 @@ import {
 } from "@/state/api";
 import React, { useState } from "react";
 import { toast } from "sonner";
+// import { Toaster } from "@/components/ui/sonner";
+
 
 const Cars = () => {
   const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
@@ -48,9 +50,9 @@ const Cars = () => {
     }
   };
 
-  const handleCancelDelete = () => {
-    setDeleteConfirmId(null);
-  };
+  // const handleCancelDelete = () => {
+  //   setDeleteConfirmId(null);
+  // };
 
   if (isLoading) return <Loading />;
   if (error)
@@ -83,7 +85,7 @@ const Cars = () => {
       )}
       
       {/* Confirmation toast for delete */}
-      {deleteConfirmId && (
+      {/* {deleteConfirmId && (
         <div className="fixed bottom-4 right-4 bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded transition ease-in-out duration-500">
           <p>Click delete again to confirm, or wait 3 seconds to cancel</p>
           <button 
@@ -93,7 +95,7 @@ const Cars = () => {
             Cancel
           </button>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

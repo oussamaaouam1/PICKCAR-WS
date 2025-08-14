@@ -74,9 +74,7 @@ export const api = createApi({
             },
           };
         } catch (error: any) {
-          return {
-            error: (error.message as Error) || "Could not fetch user data",
-          };
+          return { error: error.message || "Could not fetch user data" };
         }
       },
     }),
@@ -92,6 +90,12 @@ export const api = createApi({
         body: updatedManager,
       }),
       invalidatesTags: (result) => [{ type: "Renters", id: result?.id }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to update Manager settings",
+          success: "Manager settings updated successfully",
+        });
+      },
     }),
     //car related endpoints
 
@@ -196,6 +200,12 @@ export const api = createApi({
         { type: "Renters", id: result?.id },
         { type: "Cars", id: "LIST" },
       ],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to add favorite car",
+          success: "Car added to favorites successfully",
+        });
+      },
     }),
     removeFavoriteCar: build.mutation<
       Renter,
@@ -209,6 +219,12 @@ export const api = createApi({
         { type: "Renters", id: result?.id },
         { type: "Cars", id: "LIST" },
       ],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          success: "Removed from favorites cars",
+          error: "Failed Removed from favorites cars(check your network..!!)",
+        });
+      },
     }),
 
     //manager related endpoints
@@ -222,6 +238,12 @@ export const api = createApi({
               { type: "Cars", id: "LIST" },
             ]
           : [{ type: "Cars", id: "LIST" }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to Load Manager Profile.",
+          // success: "Renter settings updated successfully",
+        });
+      },
     }),
 
     createCar: build.mutation<Car, FormData>({
@@ -234,6 +256,12 @@ export const api = createApi({
         { type: "Cars", id: "LIST" },
         { type: "Managers", id: result?.manager?.id },
       ],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to create car",
+          success: "Car created successfully",
+        });
+      },
     }),
 
     deleteCar: build.mutation<{ message: string }, number>({
@@ -242,6 +270,12 @@ export const api = createApi({
         method: "DELETE",
       }),
       invalidatesTags: () => [{ type: "Cars", id: "LIST" }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          success: "Car deleted successfully",
+          error: "Failed to delete car",
+        });
+      },
     }),
 
     // reservation related endpoint
@@ -249,14 +283,32 @@ export const api = createApi({
     getReservations: build.query<Reservation[], number>({
       query: () => "reservations",
       providesTags: ["Reservations"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          // success: "Reservations fetched successfully",
+          error: "Failed to Load Reservations",
+        });
+      },
     }),
     getCarReservations: build.query<Reservation, number>({
       query: (carId) => `cars/${carId}/reservations`,
       providesTags: ["Reservations"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          // success: "Reservations fetched successfully",
+          error: "Failed to Load Car Reservations",
+        });
+      },
     }),
     getPayments: build.query<Payment[], number>({
       query: (reservationId) => `reservations/${reservationId}/payments`,
       providesTags: ["Payments"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          // success: "Reservations fetched successfully",
+          error: "Failed to fetch payments",
+        });
+      },
     }),
     //applications related endpoints
     getApplications: build.query<
@@ -275,6 +327,12 @@ export const api = createApi({
         return `applications?${queryParams.toString()}`;
       },
       providesTags: ["Applications"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          // success: "Reservations fetched successfully",
+          error: "Failed to Load Applications",
+        });
+      },
     }),
     updateApplicationStatus: build.mutation<
       Application & { reservation?: Reservation },
@@ -286,6 +344,12 @@ export const api = createApi({
         body: { status },
       }),
       invalidatesTags: ["Applications", "Reservations"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          success: "Application status updated successfully",
+          error: "Failed to update application status",
+        });
+      },
     }),
     createApplication: build.mutation<Application, Partial<Application>>({
       query: (body) => ({
@@ -294,6 +358,12 @@ export const api = createApi({
         body: body,
       }),
       invalidatesTags: ["Applications"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          success: "Application created successfully",
+          error: "Failed to create Applications",
+        });
+      },
     }),
   }),
 });
