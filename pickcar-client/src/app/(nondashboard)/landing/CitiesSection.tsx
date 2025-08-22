@@ -1,7 +1,10 @@
-"use client"
+"use client";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react"; // Add useState import
 import { motion } from "framer-motion";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
+import { setFilters } from "@/state";
 
 // Animation variants for the container
 const containerVariants = {
@@ -11,16 +14,16 @@ const containerVariants = {
     transition: {
       // Stagger children animations with a longer delay for dramatic effect
       staggerChildren: 0.1,
-      delayChildren: 0.3
-    }
-  }
+      delayChildren: 0.3,
+    },
+  },
 };
 
 // Animation variants for the title
 const titleVariants = {
-  hidden: { 
+  hidden: {
     opacity: 0,
-    y: -50 // Start above final position
+    y: -50, // Start above final position
   },
   visible: {
     opacity: 1,
@@ -28,17 +31,17 @@ const titleVariants = {
     transition: {
       type: "spring",
       stiffness: 100,
-      damping: 10
-    }
-  }
+      damping: 10,
+    },
+  },
 };
 
 // Animation variants for each city card
 const cityVariants = {
-  hidden: { 
+  hidden: {
     opacity: 0,
     scale: 0.5,
-    rotate: -10 // Start slightly rotated
+    rotate: -10, // Start slightly rotated
   },
   visible: {
     opacity: 1,
@@ -47,8 +50,8 @@ const cityVariants = {
     transition: {
       type: "spring",
       stiffness: 200,
-      damping: 15
-    }
+      damping: 15,
+    },
   },
   hover: {
     scale: 1.05,
@@ -56,12 +59,48 @@ const cityVariants = {
     transition: {
       type: "spring",
       stiffness: 400,
-      damping: 10
-    }
-  }
+      damping: 10,
+    },
+  },
 };
 
 const CitiesSection = () => {
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState(""); // Add searchQuery state
+
+  const handleLocationSearch = async (cityName: string) => {
+    try {
+      if (!cityName) return;
+
+      const response = await fetch(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+          cityName
+        )}.json?access_token=${
+          process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
+        }&fuzzyMatch=true`
+      );
+      const data = await response.json();
+      if (data.features && data.features.length > 0) {
+        const [lng, lat] = data.features[0].center;
+        dispatch(
+          setFilters({
+            location: cityName,
+            coordinates: [lng, lat],
+          })
+        );
+        const params = new URLSearchParams({
+          location: cityName,
+          lat: lat.toString(),
+          lng: lng, // Convert lng to string
+        });
+        router.push(`/search?${params.toString()}`);
+      }
+    } catch (error) {
+      console.error("error search location: ", error);
+    }
+  };
+
   return (
     <motion.div
       initial="hidden"
@@ -81,7 +120,7 @@ const CitiesSection = () => {
       >
         {[
           { name: "Marrakech", image: "/cities/Marrakech.jpg" },
-          { name: "Tanger", image: "/cities/Tanger.jpg" },
+          { name: "Tangier", image: "/cities/Tanger.jpg" },
           { name: "Rabat", image: "/cities/Rabat.jpg" },
           { name: "Ouarzazate", image: "/cities/Ouarzazate.jpg" },
           { name: "Essaouira", image: "/cities/Essaouira.jpeg" },
@@ -96,7 +135,8 @@ const CitiesSection = () => {
             className="flex flex-col lg:flex-row items-center justify-center gap-2.5 cursor-pointer text-center"
             variants={cityVariants}
             whileHover="hover"
-            custom={index} // Pass index for staggered animation
+            custom={index}
+            onClick={() => handleLocationSearch(city.name)} // Add onClick handler
           >
             <Image
               src={city.image}
