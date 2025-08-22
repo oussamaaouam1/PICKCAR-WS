@@ -17,11 +17,19 @@ import { FiltersState } from ".";
 export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+    credentials: "include", // Important for cross-origin requests
+
     prepareHeaders: async (headers) => {
-      const session = await fetchAuthSession();
-      const { idToken } = session.tokens ?? {};
-      if (idToken) {
-        headers.set("Authorization", `Bearer ${idToken}`);
+      try {
+        const session = await fetchAuthSession();
+        const { idToken } = session.tokens ?? {};
+        if (idToken) {
+          headers.set("Authorization", `Bearer ${idToken}`);
+          headers.set("Content-Type", "application/json");
+          // headers.set("Access-Control-Allow-Origin", "*");
+        }
+      } catch (error) {
+        console.error("Auth session error:", error);
       }
       return headers;
     },
