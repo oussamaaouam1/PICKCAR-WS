@@ -24,25 +24,25 @@ app
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(
-  cors(
-    {
+  cors({
     origin: [
       "https://master.d15k5y9g7t378k.amplifyapp.com",
       "https://d15k5y9g7t378k.amplifyapp.com",
       "http://localhost:3000", // for local development
+      "http://192.168.3.189:3000", // 👈 add this
+      "http://localhost:5000",
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: [
       "Content-Type",
       "Authorization",
-      "Access-Control-Allow-Origin",
+      // "Access-Control-Allow-Origin",
       "Origin",
       "Accept",
     ],
     // exposedHeaders: ["Access-Control-Allow-Origin"],
-  }
-)
+  })
 );
 
 /*ROUTES*/

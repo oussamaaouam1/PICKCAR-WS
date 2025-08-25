@@ -37,14 +37,20 @@ const HeroSection = () => {
           })
         );
         const params = new URLSearchParams({
-          location : trimmedQuery,
+          location: trimmedQuery,
           lat: lat.toString(),
-          lng:lng
-        })
-        router.push(`/search?${params.toString()}`)
+          lng: lng,
+        });
+        router.push(`/search?${params.toString()}`);
       }
-    } catch(error) {
-      console.error("error search location: " ,error)
+    } catch (error) {
+      console.error("error search location: ", error);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleLocationSearch();
     }
   };
 
@@ -82,6 +88,7 @@ const HeroSection = () => {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleKeyPress}
                 placeholder="Pickup Location"
                 className="bg-transparent border-none focus:ring-0 focus:outline-none text-gray-900 placeholder-gray-500"
               />

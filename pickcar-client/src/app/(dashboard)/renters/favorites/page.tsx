@@ -45,7 +45,7 @@ const Favorites = () => {
             isFavorite={true}
             onFavoriteToggle={() => {}}
             showFavoriteButton={false}
-            carLink={`/renter/cars/${car.id}`}
+            carLink={`/renters/cars/${car.id}`}
           />
         ))}
       </div>
