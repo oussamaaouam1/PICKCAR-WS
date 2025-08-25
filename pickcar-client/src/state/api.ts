@@ -25,7 +25,7 @@ export const api = createApi({
         const { idToken } = session.tokens ?? {};
         if (idToken) {
           headers.set("Authorization", `Bearer ${idToken}`);
-          headers.set("Content-Type", "application/json");
+          // headers.set("Content-Type", "application/json");
           // headers.set("Access-Control-Allow-Origin", "*");
         }
       } catch (error) {
