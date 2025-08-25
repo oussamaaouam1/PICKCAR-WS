@@ -10,26 +10,15 @@ import {
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth";
 import { FiltersState } from ".";
-// import { result } from "lodash";
-// import { create } from "lodash";
-// import { get } from "http";
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
-    // credentials: "include", // Important for cross-origin requests
-
     prepareHeaders: async (headers) => {
-      try {
-        const session = await fetchAuthSession();
-        const { idToken } = session.tokens ?? {};
-        if (idToken) {
-          headers.set("Authorization", `Bearer ${idToken}`);
-          // headers.set("Content-Type", "application/json");
-          // headers.set("Access-Control-Allow-Origin", "*");
-        }
-      } catch (error) {
-        console.error("Auth session error:", error);
+      const session = await fetchAuthSession();
+      const { idToken } = session.tokens ?? {};
+      if (idToken) {
+        headers.set("Authorization", `Bearer ${idToken}`);
       }
       return headers;
     },
@@ -49,7 +38,6 @@ export const api = createApi({
       queryFn: async (_, _queryApi, _extraoptions, fetchWithBQ) => {
         try {
           const session = await fetchAuthSession();
-          // console.log("session", session);
           const { idToken } = session.tokens ?? {};
           const user = await getCurrentUser();
           const userRole = idToken?.payload["custom:role"] as string;
