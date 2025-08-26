@@ -38,7 +38,9 @@ const NewCar = () => {
   const [countries] = useState<CountryType[]>(Country.getAllCountries());
   const [states, setStates] = useState<StateType[]>([]);
   const [cities, setCities] = useState<CityType[]>([]);
-  const [selectedCountry, setSelectedCountry] = useState<CountryType | null>(null);
+  const [selectedCountry, setSelectedCountry] = useState<CountryType | null>(
+    null
+  );
   const [selectedState, setSelectedState] = useState<StateType | null>(null);
 
   const handleCountryChange = (countryName: string) => {
@@ -49,22 +51,20 @@ const NewCar = () => {
       setStates(countryStates);
       setCities([]);
       setSelectedState(null);
-      console.log('this are what you choose ',selectedCountry,selectedState)
+      console.log("this are what you choose ", selectedCountry, selectedState);
     }
-          console.log(
-            "this are what you choose ",
-            selectedCountry,
-            selectedState
-          );
-
+    console.log("this are what you choose ", selectedCountry, selectedState);
   };
 
   const handleStateChange = (stateName: string) => {
     const state = states.find((s) => s.name === stateName);
     if (state && selectedCountry) {
       setSelectedState(state);
-      const stateCities = City.getCitiesOfState(selectedCountry.isoCode, state.isoCode);
-      setCities(stateCities);
+      const stateCities = City.getCitiesOfState(
+        selectedCountry.isoCode,
+        state.isoCode
+      );
+      setCities(stateCities || []); // Handle empty cities array
     }
   };
 
@@ -274,25 +274,39 @@ const NewCar = () => {
                     }))}
                     onChange={handleStateChange}
                   />
-                  <CustomFormField
-                    name="city"
-                    label="City"
-                    className="w-full"
-                    type="select"
-                    disabled={!selectedState}
-                    placeholder="Select City"
-                    options={cities.map((city) => ({
-                      value: city.name,
-                      label: city.name,
-                    }))}
-                  />
+                  {cities.length > 0 ? (
+                    <CustomFormField
+                      name="city"
+                      label="City"
+                      className="w-full"
+                      type="select"
+                      disabled={!selectedState}
+                      placeholder="Select City"
+                      options={cities.map((city) => ({
+                        value: city.name,
+                        label: city.name,
+                      }))}
+                    />
+                  ) : (
+                    <CustomFormField
+                      name="city"
+                      label="City"
+                      className="w-full"
+                      placeholder="Enter City Name"
+                      disabled={!selectedState}
+                    />
+                  )}
                   <CustomFormField
                     name="postalCode"
                     label="Postal Code"
                     className="w-full"
                   />
                 </div>
-                <CustomFormField name="address" label="Address" />
+                <CustomFormField
+                  name="address"
+                  label="Address"
+                  placeholder="Please provide a valid address ex(39 Av. Abderrahim Bouabid)"
+                />
               </div>
               <div className="flex justify-center">
                 <Button

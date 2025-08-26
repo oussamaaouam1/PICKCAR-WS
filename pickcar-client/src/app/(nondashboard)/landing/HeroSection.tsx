@@ -4,16 +4,19 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { MapPin, Search } from "lucide-react";
+import { Car, MapPin, Plus, Search } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { setFilters } from "@/state";
+import { useGetAuthUserQuery } from "@/state/api";
 // import dynamic from "next/dynamic";
 
 const HeroSection = () => {
+  const { data: authUser } = useGetAuthUserQuery();
   const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
+
   const handleLocationSearch = async () => {
     try {
       const trimmedQuery = searchQuery.trim();
@@ -54,6 +57,14 @@ const HeroSection = () => {
     }
   };
 
+  // Add new handler for manager navigation
+  const handleManagerNavigation = () => {
+    router.push("/managers/cars");
+  };
+  const handleAddCar =()=>{
+    router.push("/managers/new-car");
+  }
+
   return (
     <div className="relative min-h-screen w-full">
       <Image
@@ -83,17 +94,29 @@ const HeroSection = () => {
         <div className="w-full max-w-4xl mx-auto">
           <div className="bg-white rounded-2xl shadow-2xl p-2 sm:p-4 flex flex-col sm:flex-row gap-4">
             <div className="flex-1 flex items-center space-x-2 border-b sm:border-b-0 sm:border-r border-gray-200 p-2">
-              <MapPin className="text-primary-700 w-5 h-5 flex-shrink-0" />
-              <Input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={handleKeyPress}
-                placeholder="Pickup Location"
-                className="bg-transparent border-none focus:ring-0 focus:outline-none text-gray-900 placeholder-gray-500"
-              />
+              {authUser?.userRole.toLowerCase() === "manager" ? (
+                <>
+                  <Car className="text-primary-700 w-7 h-7 flex-shrink-0" />
+                  <div className="bg-transparent border-none focus:ring-0 focus:outline-none text-gray-500 placeholder-gray-500 text-2xl font-michroma hover:underline transform transition duration-700 hover:cursor-pointer"
+                  onClick={handleManagerNavigation}>
+                    Go to Dashboard
+                  </div>
+                </>
+              ) : (
+                <>
+                  <MapPin className="text-primary-700 w-5 h-5 flex-shrink-0" />
+                  <Input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={handleKeyPress}
+                    placeholder="Pickup Location"
+                    className="bg-transparent border-none focus:ring-0 focus:outline-none text-gray-900 placeholder-gray-500 text-xl font-michroma"
+                  />
+                </>
+              )}
             </div>
-            {/* if i add advanced search by using pickup date and returd date */}
+            {/* if i add advanced search by using pickup date and return date */}
             {/* <div className="flex-1 flex items-center space-x-2 border-b sm:border-b-0 sm:border-r border-gray-200 p-2">
               <CalendarDays className="text-primary-700 w-5 h-5 flex-shrink-0" />
               <Input
@@ -113,17 +136,27 @@ const HeroSection = () => {
             </div> */}
 
             <Button
-              onClick={handleLocationSearch}
+              onClick={
+                authUser?.userRole?.toLowerCase() === "manager"
+                  ? handleAddCar
+                  : handleLocationSearch
+              }
               className="w-full sm:w-auto bg-primary-700 text-white font-semibold rounded-xl hover:bg-primary-800 transition duration-300 ease-in-out py-6 cursor-pointer"
             >
-              <Search className="w-5 h-5 sm:mr-2" />
-              {/* <a
-                href="http://localhost:3000/search"
-                className="hidden sm:inline"
-              >
-                Search
-              </a> */}
-              Search
+              {/* <Search className="w-5 h-5 sm:mr-2" />
+              Search */}
+
+              {authUser?.userRole?.toLowerCase() === "manager" ? (
+                <>
+                  <Plus className="h-4 w-4" />
+                  <span className="hidden md:block font-michroma ">Add a car</span>
+                </>
+              ) : (
+                <>
+                  <Search className="h-4 w-4 " />
+                  <span className="hidden md:block font-michroma tracking-widest">Search</span>
+                </>
+              )}
             </Button>
           </div>
         </div>
