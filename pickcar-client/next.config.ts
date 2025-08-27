@@ -12,6 +12,12 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "*.amazonaws.com",
+        port: "",
+        pathname: "/**",
+      }
     ],
   },
   // allowedDevOrigins: ["local-origin.dev", "*.local-origin.dev"],

@@ -198,22 +198,22 @@ export const createCar = async (req: Request, res: Response): Promise<void> => {
       managerCognitoId,
       ...carData
     } = req.body;
-    //Images Upload to S3
-    // const imageUrls = await Promise.all(
-    //   files.map(async (file) => {
-    //     const uploadParams = {
-    //       Bucket: process.env.AWS_S3_BUCKET_NAME || "",
-    //       Key: `cars/${Date.now()}-${file.originalname}`,
-    //       Body: file.buffer,
-    //       ContentType: file.mimetype,
-    //     };
-    //     const uploadResult = await new Upload({
-    //       client: s3Client,
-    //       params: uploadParams,
-    //     }).done();
-    //     return uploadResult.Location;
-    //   })
-    // );
+    // Images Upload to S3
+    const imageUrls = await Promise.all(
+      files.map(async (file) => {
+        const uploadParams = {
+          Bucket: process.env.AWS_S3_BUCKET_NAME || "",
+          Key: `cars/${Date.now()}-${file.originalname}`,
+          Body: file.buffer,
+          ContentType: file.mimetype,
+        };
+        const uploadResult = await new Upload({
+          client: s3Client,
+          params: uploadParams,
+        }).done();
+        return uploadResult.Location;
+      })
+    );
     // Geocoding the address using OpenStreetMap Nominatim API
     const geocodingUrl = `https://nominatim.openstreetmap.org/search?${new URLSearchParams(
       {
@@ -260,7 +260,7 @@ export const createCar = async (req: Request, res: Response): Promise<void> => {
     const newCar = await prisma.car.create({
       data: {
         ...carData,
-        // images: imageUrls,
+        images: imageUrls,
         locationId: location.id,
 
         managerCognitoId,
