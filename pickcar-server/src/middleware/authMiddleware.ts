@@ -1,6 +1,5 @@
-import jwt,{JwtPayload} from 'jsonwebtoken';
-import { Request, Response, NextFunction } from 'express';
-
+import jwt, { JwtPayload } from "jsonwebtoken";
+import { Request, Response, NextFunction } from "express";
 
 interface DecodedToken extends JwtPayload {
   sub: string;
@@ -9,41 +8,47 @@ interface DecodedToken extends JwtPayload {
 declare global {
   namespace Express {
     interface Request {
-      user?:{
-        id:string;
+      user?: {
+        id: string;
         role: string;
-      }
+      };
     }
   }
 }
 
-export const authMiddleware = (allowedRoles : string[]) => {
+export const authMiddleware = (allowedRoles: string[]) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
       res.status(401).json({ message: "Unauthorized" });
-      return
+      return;
     }
 
     try {
       const decoded = jwt.decode(token) as DecodedToken;
-      const userRole = decoded["custom:role"] || "";
+      let userRole = decoded["custom:role"] || "";
+
+      // For Google OAuth users (no custom:role), default to 'renter'
+      if (!userRole) {
+        userRole = "renter";
+      }
+
       req.user = {
         id: decoded.sub,
-        role: userRole, 
-      }
+        role: userRole,
+      };
+
       // Check if the user's role is in the allowed roles
       const hasAccess = allowedRoles.includes(userRole.toLowerCase());
       if (!hasAccess) {
         res.status(403).json({ message: "Access Denied !!" });
-        return
+        return;
       }
-      
     } catch (error) {
       res.status(401).json({ message: "Unauthorized(invalid token)" });
       console.error("Error decoding token:", error);
-      return
+      return;
     }
     next();
   };
-}
+};

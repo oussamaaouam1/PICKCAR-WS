@@ -9,9 +9,9 @@ export function cn(...inputs: ClassValue[]) {
 export function formatEnumString(str: string) {
   // Add space before capital letters and convert to title case
   return str
-    .replace(/([A-Z])/g, ' $1') // Add space before capitals
+    .replace(/([A-Z])/g, " $1") // Add space before capitals
     .trim() // Remove extra spaces
-    .replace(/\s+/g, ' '); // Replace multiple spaces with single space
+    .replace(/\s+/g, " "); // Replace multiple spaces with single space
 }
 
 export function formatPriceValue(value: number | null, isMin: boolean) {
@@ -66,8 +66,11 @@ export const createNewUserInDatabase = async (
   userRole: string,
   fetchWithBQ: any
 ) => {
+  // For Google OAuth users, if no role is specified, default to 'renter'
+  const role = userRole || "renter";
+
   const createEndpoint =
-    userRole?.toLowerCase() === "manager" ? "/managers" : "/renters";
+    role?.toLowerCase() === "manager" ? "/managers" : "/renters";
 
   const createUserResponse = await fetchWithBQ({
     url: createEndpoint,

@@ -40,14 +40,20 @@ export const api = createApi({
           const session = await fetchAuthSession();
           const { idToken } = session.tokens ?? {};
           const user = await getCurrentUser();
-          const userRole = idToken?.payload["custom:role"] as string;
+
+          // CRITICAL: Handle both email/password and Google OAuth users
+          let userRole = idToken?.payload["custom:role"] as string;
+
+          // For Google OAuth users (no custom:role), default to 'renter'
+          if (!userRole) {
+            userRole = "renter";
+          }
 
           const endpoint =
             userRole === "manager"
               ? `/managers/${user.userId}`
               : `/renters/${user.userId}`;
           let userDetailsResponse = await fetchWithBQ(endpoint);
-          // console.log("userDetailsResponse", userDetailsResponse);
 
           //if the user is not found in the database, create a new user
           if (
@@ -57,7 +63,7 @@ export const api = createApi({
             userDetailsResponse = await createNewUserInDatabase(
               user,
               idToken,
-              userRole,
+              userRole, // This will now always have a value
               fetchWithBQ
             );
           }
@@ -66,7 +72,7 @@ export const api = createApi({
             data: {
               cognitoInfo: { ...user },
               userInfo: userDetailsResponse.data as Renter | Manager,
-              userRole,
+              userRole, // This will now always have a value
             },
           };
         } catch (error: any) {
