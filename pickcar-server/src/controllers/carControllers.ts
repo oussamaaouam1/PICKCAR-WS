@@ -198,20 +198,28 @@ export const createCar = async (req: Request, res: Response): Promise<void> => {
       managerCognitoId,
       ...carData
     } = req.body;
+
     // Images Upload to S3
     const imageUrls = await Promise.all(
       files.map(async (file) => {
-        const uploadParams = {
-          Bucket: process.env.AWS_S3_BUCKET_NAME || "",
-          Key: `cars/${Date.now()}-${file.originalname}`,
-          Body: file.buffer,
-          ContentType: file.mimetype,
-        };
-        const uploadResult = await new Upload({
-          client: s3Client,
-          params: uploadParams,
-        }).done();
-        return uploadResult.Location;
+        try {
+          const uploadParams = {
+            Bucket: process.env.AWS_S3_BUCKET_NAME || "",
+            Key: `cars/${Date.now()}-${file.originalname}`,
+            Body: file.buffer,
+            ContentType: file.mimetype,
+          };
+
+          const uploadResult = await new Upload({
+            client: s3Client,
+            params: uploadParams,
+          }).done();
+
+          return uploadResult.Location;
+        } catch (error) {
+          console.error("S3 upload failed for file:", file.originalname, error);
+          throw new Error(`Failed to upload image: ${file.originalname}`);
+        }
       })
     );
     // Geocoding the address using OpenStreetMap Nominatim API
@@ -260,7 +268,7 @@ export const createCar = async (req: Request, res: Response): Promise<void> => {
     const newCar = await prisma.car.create({
       data: {
         ...carData,
-        images: imageUrls,
+        imageUrls: imageUrls,
         locationId: location.id,
 
         managerCognitoId,
@@ -289,54 +297,57 @@ export const createCar = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ message: `Error creating car: ${error.message}` });
   }
 };
-export const deleteCar = async (req:Request, res:Response): Promise<void> =>{
-  try{
-    const {id}= req.params;
+export const deleteCar = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
     const managerCognitoId = req.user?.id; //extract the cognito Id from auth middleware
-    if (!managerCognitoId){
-      res.status(401).json({message: "Unauthorized"});
+    if (!managerCognitoId) {
+      res.status(401).json({ message: "Unauthorized" });
       return;
-
     }
     //check if the car exists
     const car = await prisma.car.findFirst({
-      where : {
-        id:Number(id),
+      where: {
+        id: Number(id),
         managerCognitoId: managerCognitoId,
       },
-      include : {
+      include: {
         reservations: true,
         applications: true,
         location: true,
-      }
+      },
     });
-    if(!car){
-      res.status(404).json({message: "Car not found!"});
+    if (!car) {
+      res.status(404).json({ message: "Car not found!" });
       return;
     }
     //check if there are any reservations for the car
-    if(car.reservations.length > 0){
-      res.status(400).json({message: "Car has reservations and cannot be deleted!"});
+    if (car.reservations.length > 0) {
+      res
+        .status(400)
+        .json({ message: "Car has reservations and cannot be deleted!" });
       return;
     }
     //check if there are any applications for the car
-    if(car.applications.length > 0){
-      res.status(400).json({message: "Car has applications and cannot be deleted!"});
+    if (car.applications.length > 0) {
+      res
+        .status(400)
+        .json({ message: "Car has applications and cannot be deleted!" });
       return;
     }
-    await prisma.$transaction(async(tx)=>{
+    await prisma.$transaction(async (tx) => {
       //Delete applications
       await tx.application.deleteMany({
-        where: {carId:Number(id)},
+        where: { carId: Number(id) },
       });
       //Delete The car
       await tx.car.delete({
-        where: {id:Number(id)},
+        where: { id: Number(id) },
       });
-    })
-    res.status(200).json({message: "Car deleted with successfully"})
-  } catch(error: any){
+    });
+    res.status(200).json({ message: "Car deleted with successfully" });
+  } catch (error: any) {
     console.error("Error deleting car:", error);
-    res.status(500).json({message: ` ${error.message}`});
+    res.status(500).json({ message: ` ${error.message}` });
   }
-}
+};
